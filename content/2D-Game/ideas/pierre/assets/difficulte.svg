@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" font-family="Segoe UI, Arial, sans-serif">
+<rect width="760" height="380" rx="14" fill="#12141c"/>
+<text x="380" y="38" fill="#e6e6ef" font-size="18" font-weight="600" text-anchor="middle">Difficulté au fil des niveaux</text>
+<line x1="80.0" y1="70" x2="80.0" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="112.6" y1="70" x2="112.6" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="145.3" y1="70" x2="145.3" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="177.9" y1="70" x2="177.9" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="210.5" y1="70" x2="210.5" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="243.2" y1="70" x2="243.2" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="275.8" y1="70" x2="275.8" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="308.4" y1="70" x2="308.4" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="341.1" y1="70" x2="341.1" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="373.7" y1="70" x2="373.7" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="406.3" y1="70" x2="406.3" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="438.9" y1="70" x2="438.9" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="471.6" y1="70" x2="471.6" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="504.2" y1="70" x2="504.2" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="536.8" y1="70" x2="536.8" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="569.5" y1="70" x2="569.5" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="602.1" y1="70" x2="602.1" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="634.7" y1="70" x2="634.7" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="667.4" y1="70" x2="667.4" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="700.0" y1="70" x2="700.0" y2="290" stroke="#262a38" stroke-width="1"/>
+<line x1="210.5" y1="70" x2="210.5" y2="290" stroke="#e0af68" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="210.5" y="62" fill="#e0af68" font-size="12" font-weight="600" text-anchor="middle">Mini-boss</text>
+<line x1="536.8" y1="70" x2="536.8" y2="290" stroke="#e0af68" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="536.8" y="62" fill="#e0af68" font-size="12" font-weight="600" text-anchor="middle">Mini-boss</text>
+<line x1="373.7" y1="70" x2="373.7" y2="290" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="373.7" y="62" fill="#ff6b6b" font-size="12" font-weight="600" text-anchor="middle">Boss</text>
+<line x1="700.0" y1="70" x2="700.0" y2="290" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="700.0" y="62" fill="#ff6b6b" font-size="12" font-weight="600" text-anchor="middle">Boss</text>
+<line x1="80" y1="290" x2="720" y2="290" stroke="#8a8fa8" stroke-width="1.5"/>
+<line x1="80" y1="290" x2="80" y2="50" stroke="#8a8fa8" stroke-width="1.5"/>
+<text x="80.0" y="308" fill="#b4b8cc" font-size="12" text-anchor="middle">1</text>
+<text x="210.5" y="308" fill="#b4b8cc" font-size="12" text-anchor="middle">5</text>
+<text x="373.7" y="308" fill="#b4b8cc" font-size="12" text-anchor="middle">10</text>
+<text x="536.8" y="308" fill="#b4b8cc" font-size="12" text-anchor="middle">15</text>
+<text x="700.0" y="308" fill="#b4b8cc" font-size="12" text-anchor="middle">20</text>
+<text x="732" y="295" fill="#b4b8cc" font-size="16">∞</text>
+<text x="390" y="330" fill="#b4b8cc" font-size="13" text-anchor="middle">Niveau (ordre aléatoire, difficulté qui monte toujours)</text>
+<text x="30" y="180" fill="#b4b8cc" font-size="13" text-anchor="middle" transform="rotate(-90 30 180)">Intensité</text>
+<polyline points="80.0,263.6 112.6,256.1 145.3,248.6 177.9,241.2 210.5,233.7 243.2,226.2 275.8,218.7 308.4,211.2 341.1,203.8 373.7,196.3 406.3,188.8 438.9,181.3 471.6,173.8 504.2,166.4 536.8,158.9 569.5,151.4 602.1,143.9 634.7,136.4 667.4,129.0 700.0,121.5" fill="none" stroke="#7aa2f7" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="80.0,276.8 112.6,275.1 145.3,273.1 177.9,271.0 210.5,268.5 243.2,265.7 275.8,262.5 308.4,258.9 341.1,254.9 373.7,250.3 406.3,245.2 438.9,239.4 471.6,232.8 504.2,225.3 536.8,216.9 569.5,207.4 602.1,196.7 634.7,184.6 667.4,170.9 700.0,155.4" fill="none" stroke="#ff6b6b" stroke-width="3" stroke-linejoin="round"/>
+<rect x="100" y="84" width="14" height="4" fill="#7aa2f7"/><text x="122" y="90" fill="#e6e6ef" font-size="13">Vitesse des balles</text>
+<rect x="100" y="104" width="14" height="4" fill="#ff6b6b"/><text x="122" y="110" fill="#e6e6ef" font-size="13">Dégâts des balles</text>
+<text x="100" y="130" fill="#b4b8cc" font-size="12">+ les boss ont de plus en plus de PV (patterns identiques)</text>
+</svg>
