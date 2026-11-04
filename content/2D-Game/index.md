@@ -8,6 +8,8 @@ Créer un jeu 2D en Java en respectant les principes POO. Le jeu doit avoir une 
 
 **Équipe :** [[Pierre]] · [[Chris]]
 
+**Idées :** [[2D-Game/ideas/index|ideas]]
+
 Sources : `Desktop/student_resources_2D-Game` (sujet v5.0.2 + bootstraps).
 
 ## Tâches
