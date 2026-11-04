@@ -1,6 +1,7 @@
 ---
 title: 04 - Conception (GDD & UML)
 tags: [2d-game, conception, uml]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 On n'écrit pas de code avant d'avoir terminé le Game Design Document.

@@ -1,6 +1,7 @@
 ---
 title: 02 - Bootstrap JavaFX
 tags: [2d-game, bootstrap, javafx]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Prise en main de JavaFX : afficher une fenêtre, un personnage, et le déplacer au clavier dans une boucle de jeu à 60 FPS.

@@ -1,6 +1,7 @@
 ---
 title: 07 - Soutenance
 tags: [2d-game, soutenance]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Montrer qu'on maîtrise la POO. Le projet doit aussi pouvoir être montré à des recruteurs.

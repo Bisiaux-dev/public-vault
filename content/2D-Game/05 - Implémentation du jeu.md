@@ -1,6 +1,7 @@
 ---
 title: 05 - Implémentation du jeu
 tags: [2d-game, dev]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Coder un POC jouable qui suit le GDD et l'UML. On peut partir de [[01 - Bootstrap console (grille)]] et de [[02 - Bootstrap JavaFX]].

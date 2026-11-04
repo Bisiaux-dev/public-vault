@@ -1,6 +1,7 @@
 ---
 title: 01 - Bootstrap console (grille)
 tags: [2d-game, bootstrap]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Faire un jeu simple sur une grille 2D fixe. Le joueur se déplace d'une case par tour (haut, bas, gauche, droite). Dans une case, il combat les ennemis un par un. Quand il n'y a plus d'ennemi, il ramasse les objets. Ce bootstrap peut servir de première brique pour le projet.

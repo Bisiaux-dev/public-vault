@@ -1,9 +1,12 @@
 ---
 title: 2D Game — Projet Java (Epitech)
 tags: [2d-game, java, poo]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Créer un jeu 2D en Java en respectant les principes POO. Le jeu doit avoir une interface graphique, un GDD, des diagrammes UML, des tests automatisés avec mesure de couverture, la Javadoc, et une démo jouable à présenter en soutenance.
+
+**Équipe :** [[Pierre]] · [[Chris]]
 
 Sources : `Desktop/student_resources_2D-Game` (sujet v5.0.2 + bootstraps).
 

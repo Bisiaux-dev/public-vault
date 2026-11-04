@@ -1,6 +1,7 @@
 ---
 title: 03 - Bootstrap LibGDX
 tags: [2d-game, bootstrap, libgdx]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Bootstrap alternatif, à faire seulement si tu choisis LibGDX plutôt que JavaFX. Le dossier `BOOTRAP_LibGDX` est vide pour l'instant.

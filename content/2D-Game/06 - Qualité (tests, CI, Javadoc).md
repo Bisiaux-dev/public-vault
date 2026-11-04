@@ -1,6 +1,7 @@
 ---
 title: 06 - Qualité (tests, CI, Javadoc)
 tags: [2d-game, tests, ci]
+equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
 Retour : [[2D-Game/index|2D Game]]
