@@ -101,16 +101,17 @@ flowchart LR
 
 ## Pourquoi ça colle au projet (POO)
 
-| Élément du jeu | Piste de conception |
-|---|---|
-| Pièces (canon, booster, bouclier…) | Classe abstraite `ShipPart` + sous-classes, `merge()` pour la fusion |
-| Vaisseau construit | **Composite** : le vaisseau est un assemblage de pièces, avec une hitbox calculée |
-| Bases de vaisseau | Héritage ou **Factory** `ShipFactory` |
-| Patterns de tir des ennemis et boss | **Strategy** `BulletPattern` |
-| Phases des boss | **State** |
-| Ordre des niveaux, récompenses | `LevelPool` / `RewardGenerator` avec une graine aléatoire (testable) |
-| Défis de déblocage | **Observer** sur les événements de la run |
-| Montée en difficulté | `DifficultyScaler` appliqué aux balles et aux PV des boss |
+| Élément du jeu                      | Piste de conception                                                               |
+| ----------------------------------- | --------------------------------------------------------------------------------- |
+| Pièces (canon, booster, bouclier…)  | Classe abstraite `ShipPart` + sous-classes, `merge()` pour la fusion              |
+| Vaisseau construit                  | **Composite** : le vaisseau est un assemblage de pièces, avec une hitbox calculée |
+| Bases de vaisseau                   | Héritage ou **Factory** `ShipFactory`                                             |
+| Patterns de tir des ennemis et boss | **Strategy** `BulletPattern`                                                      |
+| Phases des boss                     | **State**                                                                         |
+| Ordre des niveaux, récompenses      | `LevelPool` / `RewardGenerator` avec une graine aléatoire (testable)              |
+| Défis de déblocage                  | **Observer** sur les événements de la run                                         |
+| Montée en difficulté                | `DifficultyScaler` appliqué aux balles et aux PV des boss                         |
+|                                     |                                                                                   |
 
 ## Questions ouvertes
 
