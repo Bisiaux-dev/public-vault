@@ -82,10 +82,11 @@ Les **attaques des boss restent les mêmes** : elles suivent des **patterns fixe
 
 Il y a deux manières de débloquer du contenu :
 
-| Ce qu'on débloque | Comment | Exemple |
-|---|---|---|
-| **Nouvelles bases de vaisseau** | En remplissant des **défis pendant une run** | Équiper assez de boosters de dash en une partie débloque un vaisseau qui recharge ses dashs plus vite |
-| **Nouvelles armes** | Avec des **loot box** achetées avec les points gagnés | Une loot box donne une arme qui pourra ensuite apparaître dans les récompenses |
+| Ce qu'on débloque               | Comment                                               | Exemple                                                                                               |
+| ------------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Nouvelles bases de vaisseau** | En remplissant des **défis pendant une run**          | Équiper assez de boosters de dash en une partie débloque un vaisseau qui recharge ses dashs plus vite |
+| **Nouvelles armes**             | Avec des **loot box** achetées avec les points gagnés | Une loot box donne une arme qui pourra ensuite apparaître dans les récompenses                        |
+|                                 |                                                       |                                                                                                       |
 
 ```mermaid
 flowchart LR
