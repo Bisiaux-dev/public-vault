@@ -7,6 +7,8 @@ statut: idée
 
 Idée de [[Pierre]] pour le projet [[2D-Game/index|2D Game]].
 
+UML : [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|Bullet hell roguelike — UML]]
+
 ## Pitch
 
 Un **shoot 'em up bullet hell** à la manière d'un **roguelike**. On construit son vaisseau **pièce par pièce** avec les pièces gagnées à la fin de chaque niveau. Les niveaux s'enchaînent **à l'infini**. Chaque pièce ajoutée rend le vaisseau plus fort, **mais aussi plus gros et donc plus facile à toucher**.
