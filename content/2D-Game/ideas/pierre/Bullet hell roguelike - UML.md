@@ -325,7 +325,7 @@ classDiagram
 
 ### 3.4 Vaisseau modulaire — Composite, Factory
 
-Chaque pièce occupe une case de la grille. La hitbox du vaisseau est l'union des cases occupées. Fusionner deux pièces identiques additionne leurs stats et libère une case.
+Chaque pièce occupe une case de la grille. La hitbox du vaisseau est l'union des cases occupées. La grille fait de 3×3 à 5×5 selon la base de vaisseau. Fusionner des pièces identiques additionne leurs stats et libère des cases : 2 pièces de niveau 1 → niveau 2, 3 pièces de niveau 2 → niveau 3 (maximum).
 
 ```mermaid
 classDiagram
@@ -686,12 +686,16 @@ sequenceDiagram
     participant A as ShipAssembly
 
     Run->>Bus: publish(LevelCleared(n))
-    RS->>RG: offer(1)
-    RG-->>RS: [pièce tirée]
-    RS->>J: affiche la pièce et son effet sur la hitbox
-    alt le joueur accepte
-        J->>RS: accepter
-        RS->>ES: setScreen(EditorScreen)
+    RS->>RG: offer(3)
+    RG-->>RS: [3 pièces tirées]
+    RS->>J: affiche les 3 pièces et leur effet sur la hitbox
+    alt le joueur choisit une pièce
+        J->>RS: choisir(pièce)
+    else le joueur refuse les 3
+        J->>RS: refuser
+    end
+    RS->>ES: setScreen(EditorScreen)
+    opt une pièce a été choisie
         J->>ES: dépose la pièce sur une case
         alt case libre
             ES->>A: canPlace(part, pos)
@@ -699,13 +703,11 @@ sequenceDiagram
             ES->>A: place(part, pos)
         else case occupée par une pièce identique
             ES->>A: merge(part, pos)
-            A->>A: stats additionnées, une seule case occupée
+            A->>A: stats additionnées, niveau de fusion +1 (max 3)
         end
         ES->>Bus: publish(PartEquipped(type))
-    else le joueur refuse
-        J->>RS: refuser
     end
-    RS->>Run: nextLevel()
+    ES->>Run: nextLevel()
     Run->>Run: levelNumber++, difficulty.increase(), pool.draw(n)
 ```
 
@@ -812,18 +814,19 @@ stateDiagram-v2
 | Object Pool | `BulletPool` (étend `Pool` de LibGDX)          | Des centaines de balles à l'écran : on les recycle au lieu d'en créer à chaque tir.                 |
 | Repository  | `ProfileRepository`                            | La sauvegarde du profil se remplace par une version en mémoire dans les tests.                     |
 
-## 7. Ce qui dépend des questions ouvertes
+## 7. Décisions de game design
 
-Voir les questions ouvertes de [[2D-Game/ideas/pierre/Bullet hell roguelike|l'idée]]. L'UML les laisse ouvertes, avec un choix par défaut.
+Voir les réponses dans [[2D-Game/ideas/pierre/Bullet hell roguelike|l'idée]].
 
-| Question                                   | Où ça se joue                                  | Choix par défaut                     |
-| ------------------------------------------ | ---------------------------------------------- | ------------------------------------ |
-| Nombre de pièces proposées                 | `RewardGenerator.offer(int count)`             | 1                                    |
-| Limite de fusion                           | `ShipPart.canMergeWith()` vérifie `fusionLevel` | une constante `MAX_FUSION`           |
-| Les pièces ont-elles des PV ?              | `ShipPart` implémenterait `Damageable`         | non                                  |
-| Taille maximale du vaisseau                | `ShipAssembly.maxCells` et `canPlace()`        | champ prévu, valeur à fixer          |
-| Éditeur à chaque niveau ou après un boss ? | transition `Reward → Editor`                   | après chaque pièce acceptée          |
-| À quoi servent les points ?                | `PlayerProfile.spend()` est générique          | seulement les loot box               |
+| Question                                   | Où ça se joue                                   | Décision                                          |
+| ------------------------------------------ | ----------------------------------------------- | ------------------------------------------------- |
+| Nombre de pièces proposées                 | `RewardGenerator.offer(int count)`              | **3**, on en choisit une                          |
+| Limite de fusion                           | `ShipPart.canMergeWith()` vérifie `fusionLevel` | `MAX_FUSION = 3` (2 × niv. 1 → 2, 3 × niv. 2 → 3) |
+| Taille maximale du vaisseau                | `ShipAssembly.maxCells` et `canPlace()`         | selon la base : de 3×3 à 5×5                      |
+| Éditeur à chaque niveau ou après un boss ? | transition `Reward → Editor`                    | à chaque fin de niveau                            |
+| À quoi servent les points ?                | `PlayerProfile.spend()`                         | seulement les loot box (armes)                    |
+| Nombre de niveaux dans le pool             | `LevelPool`                                     | au moins 20                                       |
+| Les pièces ont-elles des PV ?              | `ShipPart` implémenterait `Damageable`          | *encore ouvert* (par défaut : non)                |
 
 ## 8. Exports (images)
 

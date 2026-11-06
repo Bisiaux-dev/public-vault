@@ -10,10 +10,10 @@ Retour : [[2D-Game/index|2D Game]]
 
 ## Choix du jeu
 
-- [ ] Choisir le genre ou un mélange de genres (plateformer, point'n'click, stratégie, RPG, combat, shoot'em up, course, sport…)
-- [ ] Vérifier que le genre se prête à la POO : beaucoup d'entités avec des traits communs et des comportements différents
+- [x] Choisir le genre : **bullet hell roguelike** ([[2D-Game/ideas/pierre/Bullet hell roguelike|idée retenue]])
+- [x] Vérifier que le genre se prête à la POO : beaucoup d'entités avec des traits communs et des comportements différents
 - [ ] **Faire valider le choix par le pédago**
-- [ ] Choisir la bibliothèque graphique (JavaFX, LibGDX, Swing/AWT, front JS)
+- [x] Choisir la bibliothèque graphique : **LibGDX**
 
 ## Game Design Document
 

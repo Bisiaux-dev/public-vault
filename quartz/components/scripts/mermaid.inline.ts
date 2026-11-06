@@ -207,7 +207,8 @@ document.addEventListener("nav", async () => {
       node.removeAttribute("data-processed")
       const oldText = textMapping.get(node)
       if (oldText) {
-        node.innerHTML = oldText
+        // textContent, pas innerHTML : sinon les annotations <<abstract>> des classDiagram sont lues comme des balises HTML
+        node.textContent = oldText
       }
     }
 

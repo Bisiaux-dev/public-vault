@@ -4,7 +4,7 @@ tags: [2d-game, dev]
 equipe: ["[[Pierre]]", "[[Chris]]"]
 ---
 
-Coder un POC jouable qui suit le GDD et l'UML. Le code part de [[03 - Bootstrap LibGDX]], et chaque tâche suit l'[[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML du bullet hell]] (les numéros de section y renvoient).
+Coder un POC jouable qui suit le GDD et l'UML. Le code part du bootstrap LibGDX (`BOOTRAP_LibGDX/MyFirstLibGDXGame`, Maven, LibGDX 1.13.1, Java 17, lancement : `mvn compile exec:java`), et chaque tâche suit l'[[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML du bullet hell]] (les numéros de section y renvoient).
 
 Retour : [[2D-Game/index|2D Game]]
 

@@ -8,19 +8,20 @@ Créer un jeu 2D en Java en respectant les principes POO. Le jeu doit avoir une 
 
 **Équipe :** [[Pierre]] · [[Chris]]
 
+**Jeu retenu :** [[2D-Game/ideas/pierre/Bullet hell roguelike|Bullet hell roguelike — vaisseau modulaire]], avec **LibGDX**.
+
+**Défense (fin du projet) :** lundi 23 novembre 2026.
+
 **Idées :** [[2D-Game/ideas/index|ideas]]
 
-Sources : `Desktop/student_resources_2D-Game` (sujet v5.0.2 + bootstraps).
+Sources : `Desktop/student_resources_2D-Game` (sujet v5.0.2).
 
 ## Tâches
 
-1. [[01 - Bootstrap console (grille)]]
-2. [[02 - Bootstrap JavaFX]] *(en cours)*
-3. [[03 - Bootstrap LibGDX]] *(optionnel)*
-4. [[04 - Conception (GDD & UML)]]
-5. [[05 - Implémentation du jeu]]
-6. [[06 - Qualité (tests, CI, Javadoc)]]
-7. [[07 - Soutenance]]
+1. [[04 - Conception (GDD & UML)]]
+2. [[05 - Implémentation du jeu]]
+3. [[06 - Qualité (tests, CI, Javadoc)]]
+4. [[07 - Soutenance]]
 
 ## Points à retenir
 
