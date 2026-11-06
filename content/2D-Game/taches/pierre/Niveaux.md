@@ -6,7 +6,7 @@ equipe: ["[[Pierre]]"]
 
 Niveaux faits main, tirés dans un ordre aléatoire, avec une difficulté qui monte.
 
-Retour : [[2D-Game/tache-pierre/index|Tâches de Pierre]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3.5
+Retour : [[2D-Game/taches/pierre/index|Tâches de Pierre]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3.5
 
 - [ ] Records `LevelDefinition`, `SpawnEvent`, et l'enum `LevelType`
 - [ ] Format de fichier des niveaux (JSON) et `LevelLoader.loadAll(FileHandle)`
@@ -15,5 +15,5 @@ Retour : [[2D-Game/tache-pierre/index|Tâches de Pierre]] · [[2D-Game/ideas/pie
 - [ ] `DifficultyScaler` : vitesse et dégâts des balles, PV des boss selon le niveau
 - [ ] `RewardGenerator.offer(count)` : tire des pièces parmi celles débloquées
 - [ ] `Run` : graine, `nextLevel()`, `onLevelCleared()`, `onPlayerDeath()`
-- [ ] Créer 3 à 5 niveaux à la main pour la démo
+- [ ] Créer au moins 20 niveaux à la main (pour que l'ordre aléatoire reste varié)
 - [ ] Tests : avec la même graine, on obtient les mêmes niveaux ; les boss et mini-boss tombent aux bons numéros ; la difficulté augmente

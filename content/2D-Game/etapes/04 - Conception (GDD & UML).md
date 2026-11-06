@@ -29,9 +29,9 @@ Retour : [[2D-Game/index|2D Game]]
 
 ## UML
 
-- [ ] Diagramme de classes qui fait apparaître les design patterns
-- [ ] Diagramme de cas d'utilisation
-- [ ] Diagramme de séquence (boucle de jeu, combat…)
-- [ ] Diagramme d'états (états des entités ou du jeu)
+- [x] Diagramme de classes qui fait apparaître les design patterns ([[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3)
+- [x] Diagramme de cas d'utilisation (§1)
+- [x] Diagramme de séquence (boucle de jeu, combat…) (§4)
+- [x] Diagramme d'états (états des entités ou du jeu) (§5)
 - [ ] Diagramme d'activité, de composants ou de déploiement, si c'est utile
-- [ ] Lister et justifier les patterns choisis (Strategy, State, Factory, Observer, Command…)
+- [x] Lister et justifier les patterns choisis (Strategy, State, Factory, Observer, Command…) (§6)

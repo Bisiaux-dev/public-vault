@@ -12,24 +12,24 @@ Retour : [[2D-Game/index|2D Game]]
 
 | Qui        | Domaines                                                  | Paquets                                   | Tâches                                     |
 | ---------- | --------------------------------------------------------- | ----------------------------------------- | ------------------------------------------ |
-| À deux     | Socle (en premier), intégration (à la fin)                | tous                                      | [[2D-Game/tache-commun/index\|tache-commun]] |
-| [[Pierre]] | Vaisseau modulaire, factories, niveaux, méta-progression  | `ship`, `run`, `meta`                     | [[2D-Game/tache-pierre/index\|tache-pierre]] |
-| [[Chris]]  | Patterns, collisions, écrans                              | `entity` (patterns, boss), `core`, `view` | [[2D-Game/tache-chris/index\|tache-chris]]   |
+| À deux     | Socle (en premier), intégration (à la fin)                | tous                                      | [[2D-Game/taches/commun/index\|taches/commun]] |
+| [[Pierre]] | Vaisseau modulaire, factories, niveaux, méta-progression  | `ship`, `run`, `meta`                     | [[2D-Game/taches/pierre/index\|taches/pierre]] |
+| [[Chris]]  | Patterns, collisions, écrans                              | `entity` (patterns, boss), `core`, `view` | [[2D-Game/taches/chris/index\|taches/chris]]   |
 
 Chaque tâche de code inclut ses tests JUnit (voir [[06 - Qualité (tests, CI, Javadoc)]]).
 
 ## Ordre
 
-1. [[2D-Game/tache-commun/Socle|Socle commun]], à deux.
+1. [[2D-Game/taches/commun/Socle|Socle commun]], à deux.
 2. Chacun ses tâches, en parallèle.
-3. [[2D-Game/tache-commun/Intégration|Intégration]], à deux.
+3. [[2D-Game/taches/commun/Intégration|Intégration]], à deux.
 
 ## Dépendances entre Pierre et Chris
 
 | Tâche qui attend                                              | Ce qu'elle attend                                                        |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [[2D-Game/tache-pierre/Factories\|Factories]] (Pierre)        | les patterns ([[2D-Game/tache-chris/Patterns\|Patterns]], Chris)          |
-| [[2D-Game/tache-chris/Collisions\|Collisions]] (Chris)        | `RunEventBus` ([[2D-Game/tache-pierre/Méta-progression\|Méta-progression]], Pierre) |
-| [[2D-Game/tache-chris/Collisions\|Collisions]] (Chris)        | `ShipAssembly` ([[2D-Game/tache-pierre/Vaisseau modulaire\|Vaisseau modulaire]], Pierre) |
+| [[2D-Game/taches/pierre/Factories\|Factories]] (Pierre)        | les patterns ([[2D-Game/taches/chris/Patterns\|Patterns]], Chris)          |
+| [[2D-Game/taches/chris/Collisions\|Collisions]] (Chris)        | `RunEventBus` ([[2D-Game/taches/pierre/Méta-progression\|Méta-progression]], Pierre) |
+| [[2D-Game/taches/chris/Collisions\|Collisions]] (Chris)        | `ShipAssembly` ([[2D-Game/taches/pierre/Vaisseau modulaire\|Vaisseau modulaire]], Pierre) |
 
 Les interfaces écrites pendant le socle permettent de commencer sans attendre : on code contre l'interface, l'implémentation arrive plus tard.

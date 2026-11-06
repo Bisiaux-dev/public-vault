@@ -6,7 +6,7 @@ equipe: ["[[Pierre]]", "[[Chris]]"]
 
 Tout le reste en dépend. À faire ensemble, en une séance, avant de se répartir le travail.
 
-Retour : [[2D-Game/tache-commun/index|Tâches communes]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §2, §3.2
+Retour : [[2D-Game/taches/commun/index|Tâches communes]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §2, §3.2
 
 - [x] Créer les paquets `core`, `view`, `run`, `meta`, `ship` et `entity` dans `com.mygame`
 - [ ] Coder `Entity` (abstraite), `Damageable`, `Ship` (abstraite), `Bullet`, `Faction` et `BulletPool`

@@ -6,7 +6,7 @@ equipe: ["[[Chris]]"]
 
 Les comportements des ennemis et des boss (patterns Strategy et State).
 
-Retour : [[2D-Game/tache-chris/index|Tâches de Chris]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3.3
+Retour : [[2D-Game/taches/chris/index|Tâches de Chris]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3.3
 
 - [ ] `ShotModifiers` (record)
 - [ ] `BulletPattern` : `RadialBurst`, `Spiral` et `AimedShot`
@@ -17,4 +17,4 @@ Retour : [[2D-Game/tache-chris/index|Tâches de Chris]] · [[2D-Game/ideas/pierr
 - [ ] Tests : un pattern tire toujours les mêmes balles au même instant (déterministe) ; les `ShotModifiers` changent bien la vitesse et les dégâts ; le boss change de phase aux bons seuils de PV
 
 > [!info] Pierre attend cette tâche
-> Sa tâche [[2D-Game/tache-pierre/Factories|Factories]] (`EnemyFactory`) a besoin des patterns.
+> Sa tâche [[2D-Game/taches/pierre/Factories|Factories]] (`EnemyFactory`) a besoin des patterns.
