@@ -7,9 +7,9 @@ statut: brouillon
 
 UML de l'idée [[2D-Game/ideas/pierre/Bullet hell roguelike|Bullet hell roguelike — vaisseau modulaire]]. Ça couvre la partie UML de [[04 - Conception (GDD & UML)]].
 
-Cible : Java 21 + JavaFX (même base que `bootrap_JavaFx`).
+Cible : Java 17 + LibGDX 1.13 (même base que `BOOTRAP_LibGDX`, package `com.mygame`). `MyFirstLibGDXGame` devient `BulletHellGame` et `GameScreen` devient `PlayingScreen`.
 
-**Choix de départ : le modèle ne dépend pas de JavaFX.** Les entités ne portent pas d'`ImageView`, seulement un `spriteId`. C'est le `Renderer` qui les dessine. On peut donc tester avec JUnit les collisions, la fusion, la difficulté et le tirage des niveaux sans lancer l'interface. C'est une évolution par rapport au bootstrap, où `Entity` contient un `ImageView`.
+**Choix de départ : le modèle n'utilise que les classes de LibGDX qui marchent sans fenêtre** (`Vector2`, `Rectangle`, `Pool`). Les entités ne portent pas de `Texture`, seulement un `spriteId`. Les `Texture` et le `SpriteBatch` demandent un contexte OpenGL, donc ils restent dans `Renderer` et les écrans. On peut ainsi tester avec JUnit les collisions, la fusion, la difficulté et le tirage des niveaux sans ouvrir de fenêtre.
 
 ## 1. Cas d'utilisation
 
@@ -37,7 +37,7 @@ Les flèches indiquent qui dépend de qui. Il n'y a pas de cycle : `entity` ne c
 
 ```mermaid
 flowchart LR
-    core["core<br/>App, Game, GameState, InputHandler"]
+    core["core<br/>DesktopLauncher, BulletHellGame, écrans, InputHandler"]
     view["view<br/>Renderer"]
     run["run<br/>Run, Level, LevelPool, RewardGenerator, DifficultyScaler"]
     meta["meta<br/>PlayerProfile, Challenge, LootBox, RunEventBus"]
@@ -52,54 +52,72 @@ flowchart LR
 
 ## 3. Diagrammes de classes
 
-### 3.1 Moteur et écrans — State
+### 3.1 Moteur et écrans — State, Template Method
+
+LibGDX fournit déjà le pattern State : `Game` garde un `Screen` courant et `setScreen()` en change. Chaque écran du jeu est un état.
 
 ```mermaid
 classDiagram
     direction TB
-    class App {
-        +start(Stage stage) void
-    }
-    class GameLoop {
-        -Game game
-        -Renderer renderer
-        -long lastNanos
-        +handle(long now) void
+    class DesktopLauncher {
+        +main(String[] args)$ void
     }
     class Game {
-        -GameState state
+        <<abstract, LibGDX>>
+        +setScreen(Screen s) void
+        +render() void
+    }
+    class Screen {
+        <<interface, LibGDX>>
+        +show() void
+        +render(float delta) void
+        +hide() void
+        +dispose() void
+    }
+    class ScreenAdapter {
+        <<LibGDX>>
+    }
+    class BulletHellGame {
+        -SpriteBatch batch
+        -AssetManager assets
         -InputHandler input
         -PlayerProfile profile
         -Run run
-        +changeState(GameState next) void
-        +update(double dt) void
-        +render(Renderer r) void
+        +create() void
+        +dispose() void
     }
-    class GameState {
-        <<interface>>
-        +enter(Game game) void
-        +update(Game game, double dt) void
-        +render(Renderer r) void
-        +exit(Game game) void
+    class BaseScreen {
+        <<abstract>>
+        #BulletHellGame game
+        +render(float delta) void
+        #update(float delta)* void
+        #draw(Renderer r)* void
     }
-    class MainMenuState
-    class ShipSelectState
-    class PlayingState {
+    class MainMenuScreen
+    class ShipSelectScreen
+    class PlayingScreen {
         -Level level
     }
-    class PauseState
-    class RewardState {
+    class PauseScreen
+    class RewardScreen {
         -List~ShipPart~ offer
     }
-    class EditorState {
+    class EditorScreen {
         -ShipPart pending
     }
-    class GameOverState
-    class ShopState
+    class GameOverScreen
+    class ShopScreen
     class InputHandler {
-        -Set~KeyCode~ down
+        -IntSet down
+        -IntSet justPressed
+        +keyDown(int keycode) boolean
+        +keyUp(int keycode) boolean
         +isDown(Action a) boolean
         +wasPressed(Action a) boolean
+        +endFrame() void
+    }
+    class InputAdapter {
+        <<LibGDX>>
     }
     class Action {
         <<enumeration>>
@@ -113,30 +131,35 @@ classDiagram
         PAUSE
     }
     class Renderer {
-        -GraphicsContext gc
-        -Map~String, Image~ sprites
+        -SpriteBatch batch
+        -TextureAtlas atlas
+        -BitmapFont font
         +draw(Entity e) void
         +drawHud(Run run) void
     }
 
-    App --> GameLoop : démarre
-    GameLoop --> Game : update / render
-    GameLoop --> Renderer
-    Game o-- GameState : état courant
-    Game *-- InputHandler
+    DesktopLauncher ..> BulletHellGame : lance
+    Game <|-- BulletHellGame
+    Game o-- Screen : écran courant
+    Screen <|.. ScreenAdapter
+    ScreenAdapter <|-- BaseScreen
+    BulletHellGame *-- InputHandler
+    BulletHellGame *-- Renderer
+    InputAdapter <|-- InputHandler
     InputHandler ..> Action
-    GameState <|.. MainMenuState
-    GameState <|.. ShipSelectState
-    GameState <|.. PlayingState
-    GameState <|.. PauseState
-    GameState <|.. RewardState
-    GameState <|.. EditorState
-    GameState <|.. GameOverState
-    GameState <|.. ShopState
-    note for GameState "State : chaque écran gère ses entrées, sa mise à jour et son rendu"
+    BaseScreen <|-- MainMenuScreen
+    BaseScreen <|-- ShipSelectScreen
+    BaseScreen <|-- PlayingScreen
+    BaseScreen <|-- PauseScreen
+    BaseScreen <|-- RewardScreen
+    BaseScreen <|-- EditorScreen
+    BaseScreen <|-- GameOverScreen
+    BaseScreen <|-- ShopScreen
+    note for BaseScreen "Template Method : render() appelle update() puis draw()"
 ```
 
-`InputHandler` correspond à la classe `EventHandler` prévue dans le bootstrap. Elle est renommée pour ne pas entrer en conflit avec `javafx.event.EventHandler`.
+- `BaseScreen.render(delta)` est le même pour tous les écrans : il appelle `update(delta)`, efface l'écran, puis `draw(renderer)`. Chaque écran ne redéfinit que ces deux méthodes. On sépare ainsi la logique (testable) du dessin.
+- `InputHandler` étend `InputAdapter` et est branché avec `Gdx.input.setInputProcessor()`. Il retient les touches enfoncées pour que `PlayerShip` les lise dans `update()`. Les touches sont associées à une `Action`, donc on peut changer les contrôles sans toucher au vaisseau.
 
 ### 3.2 Entités et collisions
 
@@ -149,7 +172,7 @@ classDiagram
         #Vector2 velocity
         #String spriteId
         #boolean alive
-        +update(double dt)* void
+        +update(float delta)* void
         +getHitbox()* Hitbox
         +isAlive() boolean
         +destroy() void
@@ -163,7 +186,7 @@ classDiagram
         <<abstract>>
         #int hp
         #int maxHp
-        #double speed
+        #float speed
         +takeDamage(int amount) void
         +getHp() int
     }
@@ -176,19 +199,20 @@ classDiagram
         -MovementPattern movement
         -ShotModifiers shotMods
         -int scoreValue
-        +update(double dt) void
+        +update(float delta) void
         +getHitbox() Hitbox
     }
     class Boss {
         -BossPhase phase
         +setPhase(BossPhase next) void
-        +update(double dt) void
+        +update(float delta) void
     }
     class Bullet {
         -int damage
         -Faction faction
-        +reset(Vector2 pos, Vector2 vel, int damage, Faction f) void
-        +update(double dt) void
+        +init(Vector2 pos, Vector2 vel, int damage, Faction f) void
+        +reset() void
+        +update(float delta) void
         +getHitbox() Hitbox
     }
     class Faction {
@@ -196,15 +220,24 @@ classDiagram
         PLAYER
         ENEMY
     }
+    class Pool~T~ {
+        <<abstract, LibGDX>>
+        +obtain() T
+        +free(T object) void
+        #newObject()* T
+    }
+    class Poolable {
+        <<interface, LibGDX>>
+        +reset() void
+    }
     class BulletPool {
-        -Deque~Bullet~ free
-        -List~Bullet~ active
-        +obtain() Bullet
-        +release(Bullet b) void
-        +update(double dt) void
+        -Array~Bullet~ active
+        #newObject() Bullet
+        +spawn(Vector2 pos, Vector2 vel, int damage, Faction f) Bullet
+        +update(float delta) void
     }
     class Hitbox {
-        -List~Rect~ shapes
+        -Array~Rectangle~ shapes
         +intersects(Hitbox other) boolean
     }
 
@@ -216,9 +249,13 @@ classDiagram
     Enemy <|-- Boss
     Entity ..> Hitbox
     Bullet --> Faction
+    Poolable <|.. Bullet
+    Pool <|-- BulletPool
     BulletPool o-- "*" Bullet
     note for BulletPool "Object Pool : on recycle les balles au lieu d'en créer des centaines par seconde"
 ```
+
+`BulletPool` s'appuie sur `Pool` de LibGDX : `spawn()` fait `obtain()` puis `init()`, et une balle sortie de l'écran ou qui a touché est rendue avec `free()`, qui appelle `reset()`. `Vector2`, `Rectangle` et `Array` sont aussi ceux de LibGDX. Ils marchent sans fenêtre, donc dans les tests.
 
 ### 3.3 Comportements des ennemis — Strategy, State
 
@@ -231,40 +268,40 @@ classDiagram
     class Boss
     class BulletPattern {
         <<interface>>
-        +fire(Vector2 origin, double t, BulletPool pool, ShotModifiers mods) void
+        +fire(Vector2 origin, float t, BulletPool pool, ShotModifiers mods) void
     }
     class RadialBurst {
         -int bulletCount
     }
     class Spiral {
-        -double angularSpeed
+        -float angularSpeed
     }
     class AimedShot {
         -Supplier~Vector2~ target
     }
     class MovementPattern {
         <<interface>>
-        +positionAt(Vector2 start, double t) Vector2
+        +positionAt(Vector2 start, float t) Vector2
     }
     class LinearMove
     class SineMove
     class ShotModifiers {
         <<record>>
-        double speedMultiplier
-        double damageMultiplier
+        float speedMultiplier
+        float damageMultiplier
     }
     class BossPhase {
         <<interface>>
         +enter(Boss boss) void
-        +update(Boss boss, double dt) void
+        +update(Boss boss, float delta) void
         +next(Boss boss) BossPhase
     }
     class PatternPhase {
         -List~BulletPattern~ patterns
-        -double hpThreshold
+        -float hpThreshold
     }
     class TransitionPhase {
-        -double duration
+        -float duration
     }
     class DyingPhase
 
@@ -299,8 +336,8 @@ classDiagram
     class PlayerShip {
         -ShipAssembly assembly
         -int dashCharges
-        -double dashTimer
-        +update(double dt) void
+        -float dashTimer
+        +update(float delta) void
         +dash() void
         +takeDamage(int amount) void
         +getHitbox() Hitbox
@@ -309,7 +346,7 @@ classDiagram
         <<interface>>
         +getStats() Stats
         +getCells() List~GridPos~
-        +update(PlayerShip owner, double dt) void
+        +update(PlayerShip owner, float delta) void
         +absorb(int damage) int
     }
     class ShipAssembly {
@@ -333,8 +370,8 @@ classDiagram
     }
     class Weapon {
         -BulletPattern pattern
-        -double cooldown
-        +update(PlayerShip owner, double dt) void
+        -float cooldown
+        +update(PlayerShip owner, float delta) void
     }
     class DashBooster
     class ShieldGenerator {
@@ -351,11 +388,11 @@ classDiagram
     class Stats {
         <<record>>
         int damage
-        double fireRate
-        double speed
+        float fireRate
+        float speed
         int maxHp
         int dashCharges
-        double dashCooldown
+        float dashCooldown
         +plus(Stats other) Stats
     }
     class ShipBase {
@@ -443,19 +480,19 @@ classDiagram
     }
     class SpawnEvent {
         <<record>>
-        double time
+        float time
         EnemyType enemy
         Vector2 position
     }
     class LevelLoader {
-        +loadAll(Path dir) List~LevelDefinition~
+        +loadAll(FileHandle dir) List~LevelDefinition~
     }
     class Level {
         -LevelDefinition definition
         -List~Enemy~ enemies
         -BulletPool bullets
-        -double elapsed
-        +update(double dt) void
+        -float elapsed
+        +update(float delta) void
         +isCleared() boolean
     }
     class EnemyFactory {
@@ -465,7 +502,7 @@ classDiagram
         -int tier
         +increase() void
         +enemyShots() ShotModifiers
-        +bossHpMultiplier() double
+        +bossHpMultiplier() float
     }
     class RewardGenerator {
         -Random rng
@@ -592,7 +629,7 @@ classDiagram
 
 - Au début d'une run, `Run` remet à zéro les défis non remplis du profil et les abonne au bus.
 - Exemple : `EquipPartsChallenge(DASH_BOOSTER, 5)` compte les `PartEquipped(DASH_BOOSTER)`. À 5, il passe à `completed` et débloquera `DashBase`.
-- `InMemoryProfileRepository` sert aux tests : pas d'écriture sur le disque.
+- `JsonProfileRepository` écrit le profil avec `Json` de LibGDX dans `Gdx.files.local()`. `InMemoryProfileRepository` sert aux tests : pas d'écriture sur le disque.
 
 ## 4. Diagrammes de séquence
 
@@ -600,9 +637,9 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-    participant GL as GameLoop
-    participant G as Game
-    participant PS as PlayingState
+    participant GDX as Boucle LibGDX
+    participant G as BulletHellGame
+    participant PS as PlayingScreen
     participant L as Level
     participant P as PlayerShip
     participant E as Enemy
@@ -610,29 +647,29 @@ sequenceDiagram
     participant C as CollisionSystem
     participant R as Renderer
 
-    GL->>G: update(dt)
-    G->>PS: update(game, dt)
-    PS->>L: update(dt)
+    GDX->>G: render()
+    G->>PS: render(delta)
+    PS->>PS: update(delta)
+    PS->>L: update(delta)
     L->>L: fait apparaître les SpawnEvent dont le temps est passé
-    L->>P: update(dt)
+    L->>P: update(delta)
     P->>P: lit InputHandler, bouge, dash
     P->>Pool: les Weapon tirent via leur BulletPattern
     loop chaque ennemi
-        L->>E: update(dt)
+        L->>E: update(delta)
         E->>E: movement.positionAt(start, t)
         E->>Pool: pattern.fire(origin, t, pool, shotMods)
     end
-    L->>Pool: update(dt)
+    L->>Pool: update(delta)
     L->>C: resolve(player, enemies, pool)
     C-->>P: takeDamage() si touché
     C-->>E: takeDamage() si touché
     alt PV du joueur à 0
-        PS->>G: changeState(GameOverState)
+        PS->>G: setScreen(GameOverScreen)
     else niveau terminé
-        PS->>G: changeState(RewardState)
+        PS->>G: setScreen(RewardScreen)
     end
-    GL->>G: render(renderer)
-    G->>PS: render(renderer)
+    PS->>PS: draw(renderer)
     PS->>R: draw(entité) pour chaque entité, puis drawHud(run)
 ```
 
@@ -643,9 +680,9 @@ sequenceDiagram
     actor J as Joueur
     participant Run
     participant Bus as RunEventBus
-    participant RS as RewardState
+    participant RS as RewardScreen
     participant RG as RewardGenerator
-    participant ES as EditorState
+    participant ES as EditorScreen
     participant A as ShipAssembly
 
     Run->>Bus: publish(LevelCleared(n))
@@ -654,7 +691,7 @@ sequenceDiagram
     RS->>J: affiche la pièce et son effet sur la hitbox
     alt le joueur accepte
         J->>RS: accepter
-        RS->>ES: changeState(EditorState)
+        RS->>ES: setScreen(EditorScreen)
         J->>ES: dépose la pièce sur une case
         alt case libre
             ES->>A: canPlace(part, pos)
@@ -677,13 +714,13 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor J as Joueur
-    participant PS as PlayingState
+    participant PS as PlayingScreen
     participant Run
     participant Bus as RunEventBus
     participant Ch as Challenge
     participant Prof as PlayerProfile
     participant Repo as ProfileRepository
-    participant Shop as ShopState
+    participant Shop as ShopScreen
     participant LB as LootBox
 
     Note over Run,Ch: au début de la run, les défis du profil sont abonnés au bus
@@ -707,7 +744,7 @@ sequenceDiagram
 
 ## 5. Diagrammes d'états
 
-### 5.1 États du jeu (`GameState`)
+### 5.1 Écrans du jeu (`Screen`)
 
 ```mermaid
 stateDiagram-v2
@@ -765,13 +802,14 @@ stateDiagram-v2
 
 | Pattern     | Où                                             | Pourquoi                                                                                           |
 | ----------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| State       | `Game` / `GameState`                           | Chaque écran a ses propres entrées, sa mise à jour et son rendu, sans grand `switch` dans la boucle. |
+| State       | `BulletHellGame` / `Screen`                   | Fourni par LibGDX (`setScreen()`). Chaque écran a ses entrées, sa logique et son rendu, sans grand `switch`. |
+| Template Method | `BaseScreen`                               | `render()` est commun : il appelle `update()` puis `draw()`, que chaque écran redéfinit.             |
 | State       | `Boss` / `BossPhase`                           | Les phases changent selon les PV. Chaque phase est une classe qu'on peut tester seule.              |
 | Strategy    | `BulletPattern`, `MovementPattern`             | Les ennemis et les armes du joueur partagent les mêmes patterns. Une nouvelle arme = un nouveau pattern. |
 | Composite   | `ShipComponent` / `ShipAssembly` / `ShipPart`  | On traite le vaisseau entier comme une pièce : stats, hitbox et absorption sont la somme des enfants. |
 | Factory     | `ShipFactory`, `PartCatalog`, `EnemyFactory`   | Un seul endroit crée les bases, les pièces gagnées et les ennemis ajustés à la difficulté.          |
 | Observer    | `RunEventBus` / `RunListener` / `Challenge`    | Les défis suivent la run sans que `Run` les connaisse. On ajoute un défi sans toucher à `Run`.     |
-| Object Pool | `BulletPool`                                   | Des centaines de balles à l'écran : on les recycle au lieu d'en créer à chaque tir.                 |
+| Object Pool | `BulletPool` (étend `Pool` de LibGDX)          | Des centaines de balles à l'écran : on les recycle au lieu d'en créer à chaque tir.                 |
 | Repository  | `ProfileRepository`                            | La sauvegarde du profil se remplace par une version en mémoire dans les tests.                     |
 
 ## 7. Ce qui dépend des questions ouvertes
@@ -786,3 +824,23 @@ Voir les questions ouvertes de [[2D-Game/ideas/pierre/Bullet hell roguelike|l'id
 | Taille maximale du vaisseau                | `ShipAssembly.maxCells` et `canPlace()`        | champ prévu, valeur à fixer          |
 | Éditeur à chaque niveau ou après un boss ? | transition `Reward → Editor`                   | après chaque pièce acceptée          |
 | À quoi servent les points ?                | `PlayerProfile.spend()` est générique          | seulement les loot box               |
+
+## 8. Exports (images)
+
+Les 13 diagrammes sont exportés en SVG et en PNG (fond blanc) dans `assets/uml/`, pour le GDD et la soutenance. Ils ne se mettent pas à jour tout seuls : il faut les regénérer si on modifie un diagramme ci-dessus.
+
+| #   | Diagramme                      | Fichiers                                                                                                   |
+| --- | ------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| 1   | Cas d'utilisation              | [[2D-Game/ideas/pierre/assets/uml/01-cas-utilisation.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/01-cas-utilisation.svg\|SVG]] |
+| 2   | Paquets                        | [[2D-Game/ideas/pierre/assets/uml/02-paquets.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/02-paquets.svg\|SVG]] |
+| 3   | Classes : moteur et écrans     | [[2D-Game/ideas/pierre/assets/uml/03-classes-moteur.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/03-classes-moteur.svg\|SVG]] |
+| 4   | Classes : entités              | [[2D-Game/ideas/pierre/assets/uml/04-classes-entites.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/04-classes-entites.svg\|SVG]] |
+| 5   | Classes : comportements        | [[2D-Game/ideas/pierre/assets/uml/05-classes-comportements.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/05-classes-comportements.svg\|SVG]] |
+| 6   | Classes : vaisseau modulaire   | [[2D-Game/ideas/pierre/assets/uml/06-classes-vaisseau.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/06-classes-vaisseau.svg\|SVG]] |
+| 7   | Classes : run et niveaux       | [[2D-Game/ideas/pierre/assets/uml/07-classes-run.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/07-classes-run.svg\|SVG]] |
+| 8   | Classes : méta-progression     | [[2D-Game/ideas/pierre/assets/uml/08-classes-meta.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/08-classes-meta.svg\|SVG]] |
+| 9   | Séquence : une frame           | [[2D-Game/ideas/pierre/assets/uml/09-sequence-frame.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/09-sequence-frame.svg\|SVG]] |
+| 10  | Séquence : fin de niveau       | [[2D-Game/ideas/pierre/assets/uml/10-sequence-fin-niveau.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/10-sequence-fin-niveau.svg\|SVG]] |
+| 11  | Séquence : mort et déblocages  | [[2D-Game/ideas/pierre/assets/uml/11-sequence-mort.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/11-sequence-mort.svg\|SVG]] |
+| 12  | États : écrans                 | [[2D-Game/ideas/pierre/assets/uml/12-etats-ecrans.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/12-etats-ecrans.svg\|SVG]] |
+| 13  | États : phases d'un boss       | [[2D-Game/ideas/pierre/assets/uml/13-etats-boss.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/13-etats-boss.svg\|SVG]] |
