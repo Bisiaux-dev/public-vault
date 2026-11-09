@@ -33,17 +33,19 @@ flowchart LR
 
 ## 2. Paquets
 
-Les flèches indiquent qui dépend de qui. Il n'y a pas de cycle : `entity` ne connaît personne, et `PlayerShip` est rangé dans `ship` pour que `entity` ne dépende pas du vaisseau modulaire.
+Les flèches indiquent qui dépend de qui. `entity` ne connaît personne, et `PlayerShip` est rangé dans `ship` pour que `entity` ne dépende pas du vaisseau modulaire. Le seul cycle est voulu, entre `core` et `screen` : le jeu crée les écrans, et chaque écran garde une référence au jeu pour appeler `setScreen()`. C'est le fonctionnement normal de LibGDX.
 
 ```mermaid
 flowchart LR
-    core["core<br/>DesktopLauncher, BulletHellGame, écrans, InputHandler"]
+    core["core<br/>DesktopLauncher, BulletHellGame, InputHandler"]
+    screen["screen<br/>BaseScreen et les 8 écrans"]
     view["view<br/>Renderer"]
     run["run<br/>Run, Level, LevelPool, RewardGenerator, DifficultyScaler"]
     meta["meta<br/>PlayerProfile, Challenge, LootBox, RunEventBus"]
     ship["ship<br/>PlayerShip, ShipAssembly, ShipPart, ShipBase"]
     entity["entity<br/>Entity, Ship, Enemy, Boss, Bullet, patterns"]
-    core --> run & meta & view & ship
+    core --> screen & run & meta & view
+    screen --> core & run & meta & view & ship
     view --> entity & run
     run --> meta & ship & entity
     meta --> ship
