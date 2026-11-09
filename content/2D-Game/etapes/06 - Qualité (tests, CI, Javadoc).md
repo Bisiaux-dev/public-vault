@@ -8,21 +8,20 @@ Retour : [[2D-Game/index|2D Game]]
 
 ## Tests
 
-- [ ] Passer de JUnit 4.11 à JUnit 5 dans le `pom.xml`
+- [ ] Ajouter JUnit 5 au module `core` (`core/build.gradle`)
 - [ ] Tests unitaires du combat
 - [ ] Tests unitaires des effets des objets
 - [ ] Tests unitaires des conditions de victoire et de défaite
 - [ ] Tests unitaires des comportements des ennemis et des déplacements
-- [ ] Supprimer le test d'exemple `AppTest`
 
 ## Automatisation
 
-- [ ] Lancer les tests automatiquement (script ou pipeline GitHub Actions avec `mvn test` à chaque push)
-- [ ] Mesurer la couverture (JaCoCo) et l'afficher dans la CI
+- [ ] Lancer les tests automatiquement (script ou pipeline GitHub Actions avec `./gradlew test` à chaque push)
+- [ ] Mesurer la couverture (plugin Gradle `jacoco`) et l'afficher dans la CI
 - [ ] Fixer un seuil minimal de couverture
 
 ## Documentation
 
 - [ ] Écrire la Javadoc de toutes les classes et méthodes importantes
-- [ ] Générer la Javadoc (`mvn javadoc:javadoc`)
+- [ ] Générer la Javadoc (`./gradlew javadoc`)
 - [ ] Écrire un README complet : présentation, installation, lancement, contrôles, architecture
