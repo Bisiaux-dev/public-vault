@@ -397,6 +397,11 @@ classDiagram
         float dashCooldown
         +plus(Stats other) Stats
     }
+    class GridPos {
+        <<record>>
+        int col
+        int row
+    }
     class ShipBase {
         <<abstract>>
         #ShipBaseId id
@@ -432,6 +437,9 @@ classDiagram
     ShipPart <|-- ShieldGenerator
     ShipPart --> PartType
     ShipPart --> Stats
+    ShipPart --> GridPos
+    ShipAssembly ..> GridPos
+    ShipBase --> GridPos
     Weapon o-- BulletPattern
     ShipBase <|-- StandardBase
     ShipBase <|-- DashBase
@@ -442,6 +450,7 @@ classDiagram
     note for ShipAssembly "Composite : stats, hitbox et absorption = somme des enfants"
 ```
 
+- `GridPos` est une case de la grille du vaisseau (`col`, `row`). C'est un `record` : deux `GridPos` aux mêmes coordonnées sont égales, ce qui permet de savoir si une case est déjà occupée.
 - `CANNON` et `SPREAD_GUN` sont tous deux des `Weapon` : seul leur `BulletPattern` change. Ajouter une arme ne demande pas de nouvelle classe.
 - `PlayerShip.takeDamage()` passe d'abord les dégâts à `assembly.absorb()`. Les boucliers en retirent une partie, le reste touche les PV.
 - `DashBase` est la base débloquée par le défi des boosters de dash : son `applyPassive()` réduit le temps de recharge du dash.
