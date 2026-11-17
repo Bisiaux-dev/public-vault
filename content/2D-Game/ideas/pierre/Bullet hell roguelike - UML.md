@@ -327,7 +327,7 @@ classDiagram
 
 ### 3.4 Vaisseau modulaire — Composite, Factory
 
-Chaque pièce occupe une case de la grille. La hitbox du vaisseau est l'union des cases occupées. La grille fait de 3×3 à 5×5 selon la base de vaisseau. Fusionner des pièces identiques additionne leurs stats et libère des cases : 2 pièces de niveau 1 → niveau 2, 3 pièces de niveau 2 → niveau 3 (maximum).
+Chaque pièce occupe une case de la grille. La hitbox du vaisseau est l'union des cases occupées. La grille fait de 3×3 à 5×5 selon la base de vaisseau. Fusionner des pièces identiques additionne leurs stats et libère des cases : 2 pièces de niveau 1 → niveau 2, 2 pièces de niveau 2 → niveau 3 (maximum).
 
 ```mermaid
 classDiagram
@@ -368,7 +368,7 @@ classDiagram
         #GridPos cell
         #int fusionLevel
         +canMergeWith(ShipPart other) boolean
-        +mergeWith(ShipPart other) ShipPart
+        +mergeWith(ShipPart other) void
     }
     class Weapon {
         -BulletPattern pattern
@@ -451,6 +451,7 @@ classDiagram
 ```
 
 - `GridPos` est une case de la grille du vaisseau (`col`, `row`). C'est un `record` : deux `GridPos` aux mêmes coordonnées sont égales, ce qui permet de savoir si une case est déjà occupée.
+- `mergeWith()` modifie la pièce elle-même (niveau + 1, stats additionnées avec `plus()`) au lieu d'en créer une nouvelle : comme `ShipPart` est abstraite, c'est la seule façon de garder la bonne sous-classe. `ShipAssembly.merge()` retire ensuite l'autre pièce et libère sa case.
 - `CANNON` et `SPREAD_GUN` sont tous deux des `Weapon` : seul leur `BulletPattern` change. Ajouter une arme ne demande pas de nouvelle classe.
 - `PlayerShip.takeDamage()` passe d'abord les dégâts à `assembly.absorb()`. Les boucliers en retirent une partie, le reste touche les PV.
 - `DashBase` est la base débloquée par le défi des boosters de dash : son `applyPassive()` réduit le temps de recharge du dash.
@@ -832,7 +833,7 @@ Voir les réponses dans [[2D-Game/ideas/pierre/Bullet hell roguelike|l'idée]].
 | Question                                   | Où ça se joue                                   | Décision                                          |
 | ------------------------------------------ | ----------------------------------------------- | ------------------------------------------------- |
 | Nombre de pièces proposées                 | `RewardGenerator.offer(int count)`              | **3**, on en choisit une                          |
-| Limite de fusion                           | `ShipPart.canMergeWith()` vérifie `fusionLevel` | `MAX_FUSION = 3` (2 × niv. 1 → 2, 3 × niv. 2 → 3) |
+| Limite de fusion                           | `ShipPart.canMergeWith()` vérifie `fusionLevel` | `MAX_FUSION = 3` (2 × niv. 1 → 2, 2 × niv. 2 → 3) |
 | Taille maximale du vaisseau                | `ShipAssembly.maxCells` et `canPlace()`         | selon la base : de 3×3 à 5×5                      |
 | Éditeur à chaque niveau ou après un boss ? | transition `Reward → Editor`                    | à chaque fin de niveau                            |
 | À quoi servent les points ?                | `PlayerProfile.spend()`                         | seulement les loot box (armes)                    |

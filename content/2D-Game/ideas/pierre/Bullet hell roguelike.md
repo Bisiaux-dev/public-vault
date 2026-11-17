@@ -82,7 +82,7 @@ Les **attaques des boss restent les mêmes** : elles suivent des **patterns fixe
 - **Chaque pièce prend de la place**, ce qui **agrandit la hitbox**.
 - La **taille de la grille dépend du vaisseau de base** : de **3×3 minimum** à **5×5 maximum**.
 - On peut **fusionner des pièces identiques**. Leurs **stats s'additionnent** et elles n'occupent **qu'une seule place**. C'est le moyen de devenir plus fort sans trop grossir.
-- La fusion a **3 niveaux** : 2 pièces de niveau 1 donnent une pièce de niveau 2, et **3 pièces de niveau 2** donnent une pièce de **niveau 3** (le maximum).
+- La fusion a **3 niveaux** : 2 pièces de niveau 1 donnent une pièce de niveau 2, et **2 pièces de niveau 2** donnent une pièce de **niveau 3** (le maximum).
 
 ![[2D-Game/ideas/pierre/assets/editeur-fusion.svg]]
 
@@ -129,7 +129,7 @@ flowchart LR
 
 - [x] Les **points** obtenus à la mort servent **uniquement à acheter des loot box** (donc des armes).
 - [x] **3 pièces** sont proposées à chaque fin de niveau, on en choisit une.
-- [x] La fusion va jusqu'au **niveau 3** : 2 pièces de niveau 1 → niveau 2, 3 pièces de niveau 2 → niveau 3.
+- [x] La fusion va jusqu'au **niveau 3** : 2 pièces de niveau 1 → niveau 2, 2 pièces de niveau 2 → niveau 3.
 - [x] La taille du vaisseau dépend de la base : de **3×3** à **5×5**.
 - [x] L'éditeur est disponible **à chaque fin de niveau**.
 - [x] Il faut créer **au moins 20 niveaux** pour que l'ordre aléatoire reste varié.
