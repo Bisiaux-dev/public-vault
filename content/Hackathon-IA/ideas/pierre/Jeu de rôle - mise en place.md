@@ -7,8 +7,14 @@ statut: brouillon
 
 Comment mettre en place, physiquement et techniquement, le [[Hackathon-IA/ideas/pierre/Jeu de rôle des compétences|jeu de rôle des compétences]].
 
-> [!tip] Propositions, à trancher en équipe
-> Pour chaque point, la recommandation est marquée ⭐.
+> [!success] Décisions (18/11/2026)
+> - **Format B retenu** : écran commun pour le MJ IA, réponses sur téléphone via QR code, fiche personnage papier avec gommettes.
+> - **Pas de cartes pour l'instant** (ni cartes-actions ni cartes problèmes) : chaque joueur répond sur son téléphone, à la voix ou à l'écrit.
+> - **Téléphones, réseau, imprimante et gommettes** : c'est bon.
+> - **Hébergement Railway et clé API** : on y réfléchit plus tard.
+
+> [!tip] Propositions
+> Pour chaque point, la recommandation est marquée ⭐. Les parties « cartes » restent dans la note pour plus tard.
 
 ## 1. Trois formats possibles
 
@@ -99,9 +105,10 @@ Tout est **généré depuis l'application** en HTML avec une mise en page pour l
 
 ## 6. Questions en suspens
 
-- [ ] **Format :** A, B ou C ? (recommandé : B, avec la solution de secours cartes papier)
-- [ ] **Les téléphones** : les jeunes du Centre ont-ils un téléphone et du réseau sur place ? Le Centre a-t-il des tablettes ? À demander à la responsable sur Discord.
-- [ ] **Une imprimante** est-elle disponible au hackathon et au Centre, avec des gommettes ?
+- [x] **Format :** B, sans les cartes pour l'instant
+- [x] **Les téléphones et le réseau** : c'est bon
+- [x] **Une imprimante et des gommettes** : c'est bon
+- [ ] **Cartes-actions papier** : à reprendre plus tard (solution de secours sans téléphone, aide pour les timides)
 - [ ] **Qui anime** : le psy, un conseiller, ou personne (l'IA seule) ?
-- [ ] **Hébergement** : Railway (compte de qui, clé API de qui ?)
+- [ ] **Hébergement** : Railway (compte de qui, clé API de qui ?) → **plus tard**
 - [ ] **Démo devant le jury** : on fait jouer le jury en vrai, ou on montre une partie enregistrée ?
