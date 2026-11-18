@@ -14,6 +14,15 @@ Comment mettre en place, physiquement et techniquement, le [[Hackathon-IA/ideas/
 > - **Hébergement Railway et clé API** : on y réfléchit plus tard.
 > - **Règles du tour** : phase d'échange, puis réponses privées (seuls l'auteur et le MJ les voient), sans joker. On s'arrête dès qu'un joueur a trouvé. Chacun gagne une seule compétence par problème, au passage au problème suivant, et personne n'apprend qu'il s'est trompé. Détails dans [[Hackathon-IA/ideas/pierre/Jeu de rôle des compétences#Règles validées par Pierre (18/11/2026)|les règles validées]]. Le déroulé de la section 2 ci-dessous date d'avant ces règles.
 
+> [!info] Avancement du développement (18/11/2026, soir) : MVP prêt en local
+> - Dépôt `Desktop/2026-equipe-12`, commits **locaux seulement** (rien n'est poussé ni déployé) : `8e43069` → `45f06dd`. Le contrat technique est `SPEC.md`.
+> - **Cloudflare Workers + Durable Objects** : une partie = un Durable Object (WebSocket, alarmes pour les minuteurs). Écran commun, téléphone joueur, fiche imprimable, fiche papier.
+> - 6 problèmes illustrés, compétences ROME 4.0, repères RIASEC, métiers O\*NET enrichis **ESCO** (libellés et compétences clés en français, 660 métiers sur 675).
+> - L'**écran animateur est protégé par une clé secrète**. Les réponses restent privées. Une compétence par joueur et par problème, y compris pour qui n'a pas trouvé.
+> - **MJ de secours (mock)** quand il n'y a pas de clé Anthropic : le jeu est entièrement jouable sans clé.
+> - Tests : 228 `node --test`, une simulation de partie complète par WebSocket, le dry-run de déploiement, et un parcours manuel dans Chrome.
+> - **Reste à faire** : tester avec la vraie clé Claude, `wrangler login` puis le déploiement (en attente de Pierre), et des captures pour `projet.json`.
+
 > [!tip] Propositions
 > Pour chaque point, la recommandation est marquée ⭐. Les parties « cartes » restent dans la note pour plus tard.
 
