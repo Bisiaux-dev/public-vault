@@ -2,8 +2,11 @@
 title: Jeu de rôle des compétences — chacun joue son propre rôle
 tags: [hackathon-ia, idees, jeu, jdr, ia]
 auteur: "[[Pierre]]"
-statut: à explorer
+statut: retenue
 ---
+
+> [!success] Idée validée (18/11/2026)
+> Prochaine étape : la mise en place technique.
 
 Idée de [[Pierre]] pour le [[Hackathon-IA/index|Hackathon IA]]. Elle correspond à l'angle du sujet 4 « un agent, à la voix ou sous forme de jeu, qui fait raconter des situations vécues ». Elle peut compléter l'[[Hackathon-IA/ideas/pierre/Fiche de préparation psy|idée retenue]].
 
