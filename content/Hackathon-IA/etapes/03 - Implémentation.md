@@ -19,7 +19,7 @@ Dépôt : [Code4sud/2026-equipe-12](https://github.com/Code4sud/2026-equipe-12) 
 
 ## Reste à faire
 
-- [ ] Tester l'analyse IA de bout en bout (il faut la clé Anthropic : `secret-run --env ANTHROPIC_API_KEY=… -- npm start`)
+- [ ] Tester l'analyse IA de bout en bout (il faut une clé API Anthropic dans `ANTHROPIC_API_KEY`, puis `npm start`)
 - [ ] `npm run demo` : pré-calculer les 3 exemples pour la démo statique GitHub Pages
 - [ ] Vérifier le rendu sur mobile et l'impression
 - [ ] Captures d'écran dans `captures/` et listées dans `projet.json`
