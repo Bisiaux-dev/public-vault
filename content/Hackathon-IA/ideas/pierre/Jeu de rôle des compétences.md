@@ -11,22 +11,22 @@ statut: retenue
 ## Règles validées par Pierre (18/11/2026)
 
 1. **Phase d'échange d'abord.** Le MJ présente le problème, puis les joueurs **discutent entre eux** avant de proposer quoi que ce soit.
-2. **Réponses anonymes dans le chat.** Après l'échange, chacun écrit sa réponse sur son téléphone. Elle apparaît **dans le chat de la partie, sans son nom**.
+2. **Réponses privées.** Après l'échange, chacun écrit sa réponse sur son téléphone. **Seul celui qui l'a écrite la connaît** : elle n'est montrée ni aux autres joueurs, ni sur l'écran commun. Seul le MJ IA la lit.
 3. **Pas de joker.** Tout le monde répond.
 4. **On s'arrête dès qu'une personne a bien répondu**, même si les autres se sont trompés ou ont mal répondu.
-5. **Tout le monde gagne une compétence**, y compris ceux qui n'ont pas trouvé. **L'IA doit trouver dans chaque réponse une compétence à mettre en avant**, et le joueur la met sur sa feuille.
+5. **Tout le monde gagne une compétence, une seule par problème**, donnée **quand on passe au problème suivant**. Ceux qui n'ont pas trouvé en gagnent une aussi. **L'IA doit trouver dans chaque réponse une compétence à mettre en avant**, et le joueur la met sur sa feuille.
 6. **Personne n'est notifié d'avoir mal répondu.** On ne voit jamais « faux », ni pour soi ni pour les autres.
 
 ```mermaid
 flowchart TD
     P[Le MJ IA présente le problème illustré] --> X[Phase d'échange : les joueurs discutent]
     X --> R[Chacun écrit sa réponse sur son téléphone]
-    R --> C[Les réponses apparaissent anonymement dans le chat]
+    R --> C[Réponse privée : seul l'auteur et le MJ IA la voient]
     C --> V{Au moins une réponse résout le problème ?}
     V -- Oui --> S[Le MJ annonce que le problème est résolu]
     V -- Non --> I[Le MJ donne un indice, sans dire qui s'est trompé]
     I --> X
-    S --> K[Chaque joueur reçoit une compétence tirée de SA réponse]
+    S --> K[Passage au problème suivant : chaque joueur reçoit UNE compétence, sur son téléphone]
     K --> F[Il la note sur sa feuille personnage]
     F --> P
 ```
@@ -38,10 +38,10 @@ flowchart TD
 
 **Questions qui en découlent :**
 - [ ] Si **personne** n'a trouvé : indice puis nouveau tour d'échange (c'est ce que montre le schéma), ou le MJ donne la solution ? _(à confirmer)_
-- [ ] Au 2ᵉ tour, chaque joueur gagne-t-il une 2ᵉ compétence, ou une seule par problème ? _(à confirmer)_
+- [x] Au 2ᵉ tour, une 2ᵉ compétence ? → **Non : une seule par problème**, donnée quand on passe au problème suivant. Si un joueur a répondu à plusieurs tours, le MJ choisit la compétence parmi toutes ses réponses à ce problème.
 - [ ] Si une réponse est vide ou hors sujet (« jsp », « lol »), quelle compétence ? Proposition : « participer à un travail d'équipe », tirée de la phase d'échange. _(à confirmer)_
 - [ ] La phase d'échange a-t-elle une **durée fixe** (minuteur à l'écran, ex. 2 min) ou les joueurs disent-ils « on est prêts » ? _(à confirmer)_
-- [ ] Dans le chat, les réponses s'affichent-elles **au fur et à mesure** ou **toutes d'un coup** une fois que tout le monde a répondu ? _(à confirmer)_
+- [x] Affichage des réponses → **aucun** : chaque réponse reste privée. L'écran commun montre seulement combien de joueurs ont répondu (ex. « 3/4 »), sans les noms.
 
 Idée de [[Pierre]] pour le [[Hackathon-IA/index|Hackathon IA]]. Elle correspond à l'angle du sujet 4 « un agent, à la voix ou sous forme de jeu, qui fait raconter des situations vécues ». Elle peut compléter l'[[Hackathon-IA/ideas/pierre/Fiche de préparation psy|idée retenue]].
 

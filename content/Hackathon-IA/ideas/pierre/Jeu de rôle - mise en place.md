@@ -12,7 +12,7 @@ Comment mettre en place, physiquement et techniquement, le [[Hackathon-IA/ideas/
 > - **Pas de cartes pour l'instant** (ni cartes-actions ni cartes problèmes) : chaque joueur répond sur son téléphone, à la voix ou à l'écrit.
 > - **Téléphones, réseau, imprimante et gommettes** : c'est bon.
 > - **Hébergement Railway et clé API** : on y réfléchit plus tard.
-> - **Règles du tour** : phase d'échange, puis réponses anonymes dans le chat, sans joker. On s'arrête dès qu'un joueur a trouvé. Tout le monde gagne une compétence et personne n'apprend qu'il s'est trompé. Détails dans [[Hackathon-IA/ideas/pierre/Jeu de rôle des compétences#Règles validées par Pierre (18/11/2026)|les règles validées]]. Le déroulé de la section 2 ci-dessous date d'avant ces règles.
+> - **Règles du tour** : phase d'échange, puis réponses privées (seuls l'auteur et le MJ les voient), sans joker. On s'arrête dès qu'un joueur a trouvé. Chacun gagne une seule compétence par problème, au passage au problème suivant, et personne n'apprend qu'il s'est trompé. Détails dans [[Hackathon-IA/ideas/pierre/Jeu de rôle des compétences#Règles validées par Pierre (18/11/2026)|les règles validées]]. Le déroulé de la section 2 ci-dessous date d'avant ces règles.
 
 > [!tip] Propositions
 > Pour chaque point, la recommandation est marquée ⭐. Les parties « cartes » restent dans la note pour plus tard.
