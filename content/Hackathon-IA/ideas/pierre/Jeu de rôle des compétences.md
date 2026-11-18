@@ -6,7 +6,42 @@ statut: retenue
 ---
 
 > [!success] Idée validée (18/11/2026)
-> Prochaine étape : la mise en place technique.
+> Mise en place : [[Hackathon-IA/ideas/pierre/Jeu de rôle - mise en place|formats, matériel, stack, documents]]. Les **règles validées** ci-dessous remplacent les propositions des sections suivantes quand elles se contredisent.
+
+## Règles validées par Pierre (18/11/2026)
+
+1. **Phase d'échange d'abord.** Le MJ présente le problème, puis les joueurs **discutent entre eux** avant de proposer quoi que ce soit.
+2. **Réponses anonymes dans le chat.** Après l'échange, chacun écrit sa réponse sur son téléphone. Elle apparaît **dans le chat de la partie, sans son nom**.
+3. **Pas de joker.** Tout le monde répond.
+4. **On s'arrête dès qu'une personne a bien répondu**, même si les autres se sont trompés ou ont mal répondu.
+5. **Tout le monde gagne une compétence**, y compris ceux qui n'ont pas trouvé. **L'IA doit trouver dans chaque réponse une compétence à mettre en avant**, et le joueur la met sur sa feuille.
+6. **Personne n'est notifié d'avoir mal répondu.** On ne voit jamais « faux », ni pour soi ni pour les autres.
+
+```mermaid
+flowchart TD
+    P[Le MJ IA présente le problème illustré] --> X[Phase d'échange : les joueurs discutent]
+    X --> R[Chacun écrit sa réponse sur son téléphone]
+    R --> C[Les réponses apparaissent anonymement dans le chat]
+    C --> V{Au moins une réponse résout le problème ?}
+    V -- Oui --> S[Le MJ annonce que le problème est résolu]
+    V -- Non --> I[Le MJ donne un indice, sans dire qui s'est trompé]
+    I --> X
+    S --> K[Chaque joueur reçoit une compétence tirée de SA réponse]
+    K --> F[Il la note sur sa feuille personnage]
+    F --> P
+```
+
+**Ce que ça implique côté IA (MJ) :**
+- Pour chaque réponse, même fausse ou incomplète, le MJ cherche **ce qu'elle montre de positif** : sécuriser, demander de l'aide, s'organiser, proposer une idée, écouter les autres… Cette compétence est prise dans la liste ROME du problème.
+- La **preuve reste la phrase du joueur** : la compétence est justifiée par ce qu'il a écrit, pas inventée.
+- Le MJ ne dit jamais qu'une réponse est **fausse**. Il dit « problème résolu » sans désigner la personne ni les réponses à côté.
+
+**Questions qui en découlent :**
+- [ ] Si **personne** n'a trouvé : indice puis nouveau tour d'échange (c'est ce que montre le schéma), ou le MJ donne la solution ? _(à confirmer)_
+- [ ] Au 2ᵉ tour, chaque joueur gagne-t-il une 2ᵉ compétence, ou une seule par problème ? _(à confirmer)_
+- [ ] Si une réponse est vide ou hors sujet (« jsp », « lol »), quelle compétence ? Proposition : « participer à un travail d'équipe », tirée de la phase d'échange. _(à confirmer)_
+- [ ] La phase d'échange a-t-elle une **durée fixe** (minuteur à l'écran, ex. 2 min) ou les joueurs disent-ils « on est prêts » ? _(à confirmer)_
+- [ ] Dans le chat, les réponses s'affichent-elles **au fur et à mesure** ou **toutes d'un coup** une fois que tout le monde a répondu ? _(à confirmer)_
 
 Idée de [[Pierre]] pour le [[Hackathon-IA/index|Hackathon IA]]. Elle correspond à l'angle du sujet 4 « un agent, à la voix ou sous forme de jeu, qui fait raconter des situations vécues ». Elle peut compléter l'[[Hackathon-IA/ideas/pierre/Fiche de préparation psy|idée retenue]].
 
