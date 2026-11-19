@@ -357,7 +357,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     autoStart: false,
     autoDensity: true,
     backgroundAlpha: 0,
-    preference: "webgpu",
+    // WebGL plutôt que WebGPU : WebGPU figeait tout le PC sous Windows (pilote graphique).
+    preference: "webgl",
     resolution: window.devicePixelRatio,
     eventMode: "static",
   })
