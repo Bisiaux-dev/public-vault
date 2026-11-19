@@ -21,7 +21,8 @@ Comment mettre en place, physiquement et techniquement, le [[Hackathon-IA/ideas/
 > - L'**écran animateur est protégé par une clé secrète**. Les réponses restent privées. Une compétence par joueur et par problème, y compris pour qui n'a pas trouvé.
 > - **MJ de secours (mock)** quand il n'y a pas de clé Anthropic : le jeu est entièrement jouable sans clé.
 > - Tests : 228 `node --test`, une simulation de partie complète par WebSocket, le dry-run de déploiement, et un parcours manuel dans Chrome.
-> - **Reste à faire** : tester avec la vraie clé Claude, `wrangler login` puis le déploiement (en attente de Pierre), et des captures pour `projet.json`.
+> - **En prod (19/11/2026)** : https://potentiel-cache.planbhunalp.workers.dev (Worker `potentiel-cache`, compte Cloudflare Plan B). La clé Anthropic est un secret du Worker. La simulation complète passe contre la prod.
+> - **Reste à faire** : le compte Anthropic n'a plus de crédit (« credit balance is too low »), donc le MJ de secours répond pour l'instant. Ajouter du crédit, puis vérifier une partie avec le vrai MJ. Captures pour `projet.json`.
 
 > [!tip] Propositions
 > Pour chaque point, la recommandation est marquée ⭐. Les parties « cartes » restent dans la note pour plus tard.
