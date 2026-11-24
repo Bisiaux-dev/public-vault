@@ -9,6 +9,9 @@ UML de l'idée [[2D-Game/ideas/pierre/Bullet hell roguelike|Bullet hell roguelik
 
 Cible : Java 17 + LibGDX 1.13 (même base que `BOOTRAP_LibGDX`, package `com.mygame`). `MyFirstLibGDXGame` devient `BulletHellGame` et `GameScreen` devient `PlayingScreen`.
 
+> [!note] Périmètre réduit le 2026-11-24 : boss rush
+> Le jeu est un **enchaînement de boss**. Les niveaux normaux, les mini-boss et la méta-progression (défis, points, loot box, boutique) sont mis de côté dans [[2D-Game/ideas/pierre/Bullet hell roguelike - UML (mis de côté)|UML (mis de côté)]].
+
 **Choix de départ : le modèle n'utilise que les classes de LibGDX qui marchent sans fenêtre** (`Vector2`, `Rectangle`, `Pool`). Les entités ne portent pas de `Texture`, seulement un `spriteId`. Les `Texture` et le `SpriteBatch` demandent un contexte OpenGL, donc ils restent dans `Renderer` et les écrans. On peut ainsi tester avec JUnit les collisions, la fusion, la difficulté et le tirage des niveaux sans ouvrir de fenêtre.
 
 ## 1. Cas d'utilisation
@@ -18,15 +21,13 @@ flowchart LR
     J([Joueur])
     subgraph Jeu
         UC1([Choisir un vaisseau de base])
-        UC2([Jouer un niveau])
+        UC2([Affronter un boss])
         UC3([Bouger, tirer, dasher])
         UC4([Accepter ou refuser une pièce])
         UC5([Placer une pièce dans l'éditeur])
         UC6([Fusionner deux pièces identiques])
-        UC7([Acheter une loot box])
-        UC8([Voir ses déblocages])
     end
-    J --- UC1 & UC2 & UC4 & UC5 & UC7 & UC8
+    J --- UC1 & UC2 & UC4 & UC5
     UC2 -. «include» .-> UC3
     UC6 -. «extend» .-> UC5
 ```
@@ -38,17 +39,15 @@ Les flèches indiquent qui dépend de qui. `entity` ne connaît personne, et `Pl
 ```mermaid
 flowchart LR
     core["core<br/>DesktopLauncher, BulletHellGame, InputHandler"]
-    screen["screen<br/>BaseScreen et les 8 écrans"]
+    screen["screen<br/>BaseScreen et les 7 écrans"]
     view["view<br/>Renderer"]
-    run["run<br/>Run, Level, LevelPool, RewardGenerator, DifficultyScaler"]
-    meta["meta<br/>PlayerProfile, Challenge, LootBox, RunEventBus"]
+    run["run<br/>Run, Level, BossFactory, RewardGenerator, DifficultyScaler"]
     ship["ship<br/>PlayerShip, ShipAssembly, ShipPart, ShipBase"]
     entity["entity<br/>Entity, Ship, Enemy, Boss, Bullet, patterns"]
-    core --> screen & run & meta & view
-    screen --> core & run & meta & view & ship
+    core --> screen & run & view
+    screen --> core & run & view & ship
     view --> entity & run
-    run --> meta & ship & entity
-    meta --> ship
+    run --> ship & entity
     ship --> entity
 ```
 
@@ -83,7 +82,6 @@ classDiagram
         -SpriteBatch batch
         -AssetManager assets
         -InputHandler input
-        -PlayerProfile profile
         -Run run
         +create() void
         +dispose() void
@@ -108,7 +106,6 @@ classDiagram
         -ShipPart pending
     }
     class GameOverScreen
-    class ShopScreen
     class InputHandler {
         -IntSet down
         -IntSet justPressed
@@ -156,7 +153,6 @@ classDiagram
     BaseScreen <|-- RewardScreen
     BaseScreen <|-- EditorScreen
     BaseScreen <|-- GameOverScreen
-    BaseScreen <|-- ShopScreen
     note for BaseScreen "Template Method : render() appelle update() puis draw()"
 ```
 
@@ -454,61 +450,35 @@ classDiagram
 - `mergeWith()` modifie la pièce elle-même (niveau + 1, stats additionnées avec `plus()`) au lieu d'en créer une nouvelle : comme `ShipPart` est abstraite, c'est la seule façon de garder la bonne sous-classe. `ShipAssembly.merge()` retire ensuite l'autre pièce et libère sa case.
 - `CANNON` et `SPREAD_GUN` sont tous deux des `Weapon` : seul leur `BulletPattern` change. Ajouter une arme ne demande pas de nouvelle classe.
 - `PlayerShip.takeDamage()` passe d'abord les dégâts à `assembly.absorb()`. Les boucliers en retirent une partie, le reste touche les PV.
-- `DashBase` est la base débloquée par le défi des boosters de dash : son `applyPassive()` réduit le temps de recharge du dash.
+- `DashBase` est disponible dès le début, au choix avec `StandardBase` dans `ShipSelectScreen` : son `applyPassive()` réduit le temps de recharge du dash.
 
-### 3.5 Run et niveaux
+### 3.5 Run et boss rush
+
+Une run est un enchaînement de boss. Après chaque boss vaincu : récompense, éditeur, puis le boss suivant, un peu plus difficile.
 
 ```mermaid
 classDiagram
     direction TB
     class Run {
         -long seed
-        -int levelNumber
+        -int bossNumber
         -int score
         -PlayerShip ship
         +start() void
         +nextLevel() Level
         +onLevelCleared() void
-        +onPlayerDeath() int
-    }
-    class LevelPool {
-        -List~LevelDefinition~ normals
-        -List~LevelDefinition~ miniBosses
-        -List~LevelDefinition~ bosses
-        -Random rng
-        +draw(int levelNumber) LevelDefinition
-    }
-    class LevelDefinition {
-        <<record>>
-        String id
-        LevelType type
-        List~SpawnEvent~ timeline
-    }
-    class LevelType {
-        <<enumeration>>
-        NORMAL
-        MINI_BOSS
-        BOSS
-    }
-    class SpawnEvent {
-        <<record>>
-        float time
-        EnemyType enemy
-        Vector2 position
-    }
-    class LevelLoader {
-        +loadAll(FileHandle dir) List~LevelDefinition~
+        +onPlayerDeath() void
     }
     class Level {
-        -LevelDefinition definition
-        -List~Enemy~ enemies
+        -Boss boss
         -BulletPool bullets
         -float elapsed
         +update(float delta) void
         +isCleared() boolean
     }
-    class EnemyFactory {
-        +create(EnemyType type, Vector2 pos, DifficultyScaler d) Enemy
+    class Boss
+    class BossFactory {
+        +create(int bossNumber, DifficultyScaler d) Boss
     }
     class DifficultyScaler {
         -int tier
@@ -519,129 +489,29 @@ classDiagram
     class RewardGenerator {
         -Random rng
         -PartCatalog catalog
-        -Set~PartType~ unlocked
         +offer(int count) List~ShipPart~
     }
     class CollisionSystem {
         +resolve(PlayerShip p, List~Enemy~ enemies, BulletPool pool) void
     }
-    class RunEventBus
 
-    Run *-- LevelPool
+    Run *-- BossFactory
     Run *-- RewardGenerator
     Run *-- DifficultyScaler
-    Run --> "0..1" Level : niveau courant
-    Run --> RunEventBus : publie
-    LevelPool o-- "*" LevelDefinition
-    LevelLoader ..> LevelDefinition : lit les fichiers
-    LevelDefinition --> LevelType
-    LevelDefinition *-- "*" SpawnEvent
-    Level --> LevelDefinition
-    Level ..> EnemyFactory : fait apparaître
+    Run --> "0..1" Level : combat en cours
+    Level *-- "1" Boss
     Level *-- CollisionSystem
-    EnemyFactory ..> DifficultyScaler
-    note for LevelPool "Niveaux faits main, seul l'ordre est tiré.<br>Multiple de 10 : boss. Multiple de 5 : mini-boss."
+    BossFactory ..> Boss : crée
+    BossFactory ..> DifficultyScaler
+    note for BossFactory "Boss dans un ordre fixe, en boucle :<br>après le dernier, retour au premier, plus difficile"
     note for Run "Une seule graine pour toute la run : rejouable et testable"
 ```
 
-- `Run.nextLevel()` fait `levelNumber++`, `difficulty.increase()`, puis `pool.draw(levelNumber)`. C'est le « Difficulté +1 → niveau tiré au hasard » de la boucle de run.
-- `LevelPool.draw()` tire sans remise. Quand le pool de niveaux normaux est vide, il le remélange. La partie peut donc durer à l'infini.
-- `LevelPool` et `RewardGenerator` reçoivent un `Random` créé à partir de la graine de la run. Avec la même graine, les tests obtiennent les mêmes niveaux et les mêmes pièces.
-
-### 3.6 Méta-progression — Observer
-
-```mermaid
-classDiagram
-    direction TB
-    class RunEventBus {
-        -List~RunListener~ listeners
-        +subscribe(RunListener l) void
-        +unsubscribe(RunListener l) void
-        +publish(RunEvent e) void
-    }
-    class RunListener {
-        <<interface>>
-        +onEvent(RunEvent e) void
-    }
-    class RunEvent {
-        <<sealed interface>>
-    }
-    class PartEquipped {
-        <<record>>
-        PartType type
-    }
-    class EnemyKilled {
-        <<record>>
-        EnemyType type
-    }
-    class LevelCleared {
-        <<record>>
-        int number
-    }
-    class PlayerDied {
-        <<record>>
-        int levelReached
-        int score
-    }
-    class Challenge {
-        <<abstract>>
-        #String description
-        #ShipBaseId reward
-        #boolean completed
-        +onEvent(RunEvent e) void
-        +reset() void
-        #isMet()* boolean
-    }
-    class EquipPartsChallenge {
-        -PartType type
-        -int target
-        -int count
-    }
-    class ReachLevelChallenge {
-        -int target
-    }
-    class PlayerProfile {
-        -int points
-        -Set~ShipBaseId~ unlockedBases
-        -Set~PartType~ unlockedWeapons
-        -List~Challenge~ challenges
-        +addPoints(int p) void
-        +spend(int p) boolean
-        +claimRewards() List~ShipBaseId~
-        +unlockWeapon(PartType t) void
-    }
-    class LootBox {
-        -int price
-        +open(PlayerProfile p, Random rng) Optional~PartType~
-    }
-    class ProfileRepository {
-        <<interface>>
-        +load() PlayerProfile
-        +save(PlayerProfile p) void
-    }
-    class JsonProfileRepository
-    class InMemoryProfileRepository
-
-    RunEventBus o-- "*" RunListener
-    RunEventBus ..> RunEvent
-    RunEvent <|.. PartEquipped
-    RunEvent <|.. EnemyKilled
-    RunEvent <|.. LevelCleared
-    RunEvent <|.. PlayerDied
-    RunListener <|.. Challenge
-    Challenge <|-- EquipPartsChallenge
-    Challenge <|-- ReachLevelChallenge
-    PlayerProfile *-- "*" Challenge
-    LootBox ..> PlayerProfile : dépense des points, débloque une arme
-    ProfileRepository <|.. JsonProfileRepository
-    ProfileRepository <|.. InMemoryProfileRepository
-    ProfileRepository ..> PlayerProfile
-    note for RunEventBus "Observer : les défis suivent la run sans que Run les connaisse"
-```
-
-- Au début d'une run, `Run` remet à zéro les défis non remplis du profil et les abonne au bus.
-- Exemple : `EquipPartsChallenge(DASH_BOOSTER, 5)` compte les `PartEquipped(DASH_BOOSTER)`. À 5, il passe à `completed` et débloquera `DashBase`.
-- `JsonProfileRepository` écrit le profil avec `Json` de LibGDX dans `Gdx.files.local()`. `InMemoryProfileRepository` sert aux tests : pas d'écriture sur le disque.
+- `Run.nextLevel()` fait `bossNumber++`, `difficulty.increase()`, puis crée un `Level` avec `bossFactory.create(bossNumber, difficulty)`.
+- `BossFactory` connaît la liste des boss (au moins 3). Le boss `n` est le boss `(n - 1) % nombre de boss` de la liste : après le dernier, on repart du premier avec une difficulté plus haute. La partie dure jusqu'à la mort.
+- `Level.isCleared()` est vrai quand le boss est mort. `Level` passe `List.of(boss)` à `CollisionSystem.resolve()`.
+- `RewardGenerator` reçoit un `Random` créé à partir de la graine de la run : même graine, mêmes pièces proposées. Toutes les pièces peuvent tomber.
+- Le score de la run est le nombre de boss vaincus.
 
 ## 4. Diagrammes de séquence
 
@@ -654,7 +524,7 @@ sequenceDiagram
     participant PS as PlayingScreen
     participant L as Level
     participant P as PlayerShip
-    participant E as Enemy
+    participant E as Boss
     participant Pool as BulletPool
     participant C as CollisionSystem
     participant R as Renderer
@@ -663,41 +533,37 @@ sequenceDiagram
     G->>PS: render(delta)
     PS->>PS: update(delta)
     PS->>L: update(delta)
-    L->>L: fait apparaître les SpawnEvent dont le temps est passé
     L->>P: update(delta)
     P->>P: lit InputHandler, bouge, dash
     P->>Pool: les Weapon tirent via leur BulletPattern
-    loop chaque ennemi
-        L->>E: update(delta)
-        E->>E: movement.positionAt(start, t)
-        E->>Pool: pattern.fire(origin, t, pool, shotMods)
-    end
+    L->>E: update(delta)
+    E->>E: phase.update(boss, delta)
+    E->>Pool: pattern.fire(origin, t, pool, shotMods)
     L->>Pool: update(delta)
     L->>C: resolve(player, enemies, pool)
     C-->>P: takeDamage() si touché
     C-->>E: takeDamage() si touché
     alt PV du joueur à 0
         PS->>G: setScreen(GameOverScreen)
-    else niveau terminé
+    else boss vaincu
         PS->>G: setScreen(RewardScreen)
     end
     PS->>PS: draw(renderer)
     PS->>R: draw(entité) pour chaque entité, puis drawHud(run)
 ```
 
-### 4.2 Fin de niveau : récompense, éditeur, fusion
+### 4.2 Boss vaincu : récompense, éditeur, fusion
 
 ```mermaid
 sequenceDiagram
     actor J as Joueur
     participant Run
-    participant Bus as RunEventBus
     participant RS as RewardScreen
     participant RG as RewardGenerator
     participant ES as EditorScreen
     participant A as ShipAssembly
 
-    Run->>Bus: publish(LevelCleared(n))
+    Run->>Run: onLevelCleared() : score + 1
     RS->>RG: offer(3)
     RG-->>RS: [3 pièces tirées]
     RS->>J: affiche les 3 pièces et leur effet sur la hitbox
@@ -717,43 +583,9 @@ sequenceDiagram
             ES->>A: merge(part, pos)
             A->>A: stats additionnées, niveau de fusion +1 (max 3)
         end
-        ES->>Bus: publish(PartEquipped(type))
     end
     ES->>Run: nextLevel()
-    Run->>Run: levelNumber++, difficulty.increase(), pool.draw(n)
-```
-
-### 4.3 Mort et méta-progression
-
-```mermaid
-sequenceDiagram
-    actor J as Joueur
-    participant PS as PlayingScreen
-    participant Run
-    participant Bus as RunEventBus
-    participant Ch as Challenge
-    participant Prof as PlayerProfile
-    participant Repo as ProfileRepository
-    participant Shop as ShopScreen
-    participant LB as LootBox
-
-    Note over Run,Ch: au début de la run, les défis du profil sont abonnés au bus
-    PS->>Run: onPlayerDeath()
-    Run->>Bus: publish(PlayerDied(n, score))
-    Bus->>Ch: onEvent(PlayerDied)
-    Run-->>PS: points gagnés
-    PS->>Prof: addPoints(points)
-    PS->>Prof: claimRewards()
-    Prof-->>PS: bases débloquées par les défis remplis
-    PS->>Repo: save(profile)
-    opt plus tard, dans la boutique
-        J->>Shop: acheter une loot box
-        Shop->>LB: open(profile, rng)
-        LB->>Prof: spend(price)
-        LB->>Prof: unlockWeapon(type)
-        LB-->>Shop: arme débloquée
-        Shop->>Repo: save(profile)
-    end
+    Run->>Run: bossNumber++, difficulty.increase(), bossFactory.create(n, difficulty)
 ```
 
 ## 5. Diagrammes d'états
@@ -764,31 +596,28 @@ sequenceDiagram
 stateDiagram-v2
     state "Menu principal" as Menu
     state "Choix du vaisseau" as Select
-    state "Niveau en cours" as Playing
+    state "Combat de boss" as Playing
     state "Pause" as Pause
     state "Récompense" as Reward
     state "Éditeur" as Editor
     state "Game over" as Over
-    state "Boutique" as Shop
 
     [*] --> Menu
     Menu --> Select : Jouer
-    Menu --> Shop : Boutique
-    Shop --> Menu : Retour
     Select --> Playing : base choisie, Run créée
     Playing --> Pause : Échap
     Pause --> Playing : Échap
-    Playing --> Reward : niveau terminé
+    Playing --> Reward : boss vaincu
     Playing --> Over : PV à 0
     Reward --> Editor : pièce acceptée
     Reward --> Playing : pièce refusée
     Editor --> Playing : valider
-    Over --> Menu : points et déblocages appliqués
+    Over --> Menu : score affiché
 ```
 
 ### 5.2 Phases d'un boss (`BossPhase`)
 
-Exemple pour un boss à 3 phases. Un mini-boss en a moins. Les seuils de PV sont des exemples.
+Exemple pour un boss à 3 phases. Les seuils de PV sont des exemples.
 
 ```mermaid
 stateDiagram-v2
@@ -805,7 +634,7 @@ stateDiagram-v2
     P2 --> T2 : PV sous 30 %
     T2 --> P3 : fin du délai
     P3 --> D : PV à 0
-    D --> [*] : niveau terminé
+    D --> [*] : boss vaincu
     note right of T1
         TransitionPhase : invulnérable, ne tire pas.
         Laisse le temps de lire le changement de phase.
@@ -821,10 +650,8 @@ stateDiagram-v2
 | State       | `Boss` / `BossPhase`                           | Les phases changent selon les PV. Chaque phase est une classe qu'on peut tester seule.              |
 | Strategy    | `BulletPattern`, `MovementPattern`             | Les ennemis et les armes du joueur partagent les mêmes patterns. Une nouvelle arme = un nouveau pattern. |
 | Composite   | `ShipComponent` / `ShipAssembly` / `ShipPart`  | On traite le vaisseau entier comme une pièce : stats, hitbox et absorption sont la somme des enfants. |
-| Factory     | `ShipFactory`, `PartCatalog`, `EnemyFactory`   | Un seul endroit crée les bases, les pièces gagnées et les ennemis ajustés à la difficulté.          |
-| Observer    | `RunEventBus` / `RunListener` / `Challenge`    | Les défis suivent la run sans que `Run` les connaisse. On ajoute un défi sans toucher à `Run`.     |
+| Factory     | `ShipFactory`, `PartCatalog`, `BossFactory`    | Un seul endroit crée les bases, les pièces gagnées et les boss ajustés à la difficulté.            |
 | Object Pool | `BulletPool` (étend `Pool` de LibGDX)          | Des centaines de balles à l'écran : on les recycle au lieu d'en créer à chaque tir.                 |
-| Repository  | `ProfileRepository`                            | La sauvegarde du profil se remplace par une version en mémoire dans les tests.                     |
 
 ## 7. Décisions de game design
 
@@ -835,14 +662,13 @@ Voir les réponses dans [[2D-Game/ideas/pierre/Bullet hell roguelike|l'idée]].
 | Nombre de pièces proposées                 | `RewardGenerator.offer(int count)`              | **3**, on en choisit une                          |
 | Limite de fusion                           | `ShipPart.canMergeWith()` vérifie `fusionLevel` | `MAX_FUSION = 3` (2 × niv. 1 → 2, 2 × niv. 2 → 3) |
 | Taille maximale du vaisseau                | `ShipAssembly.maxCells` et `canPlace()`         | selon la base : de 3×3 à 5×5                      |
-| Éditeur à chaque niveau ou après un boss ? | transition `Reward → Editor`                    | à chaque fin de niveau                            |
-| À quoi servent les points ?                | `PlayerProfile.spend()`                         | seulement les loot box (armes)                    |
-| Nombre de niveaux dans le pool             | `LevelPool`                                     | au moins 20                                       |
+| Éditeur à chaque niveau ou après un boss ? | transition `Reward → Editor`                    | après chaque boss                                 |
+| Ordre des boss                             | `BossFactory.create()`                          | fixe, en boucle, difficulté + 1 à chaque boss     |
 | Les pièces ont-elles des PV ?              | `ShipPart` implémenterait `Damageable`          | *encore ouvert* (par défaut : non)                |
 
 ## 8. Exports (images)
 
-Les 13 diagrammes sont exportés en SVG et en PNG (fond blanc) dans `assets/uml/`, pour le GDD et la soutenance. Ils ne se mettent pas à jour tout seuls : il faut les regénérer si on modifie un diagramme ci-dessus.
+Les 11 diagrammes sont exportés en SVG et en PNG (fond blanc) dans `assets/uml/`, pour le GDD et la soutenance. Ils ne se mettent pas à jour tout seuls : il faut les regénérer si on modifie un diagramme ci-dessus.
 
 | #   | Diagramme                      | Fichiers                                                                                                   |
 | --- | ------------------------------ | ---------------------------------------------------------------------------------------------------------- |
@@ -852,10 +678,8 @@ Les 13 diagrammes sont exportés en SVG et en PNG (fond blanc) dans `assets/uml/
 | 4   | Classes : entités              | [[2D-Game/ideas/pierre/assets/uml/04-classes-entites.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/04-classes-entites.svg\|SVG]] |
 | 5   | Classes : comportements        | [[2D-Game/ideas/pierre/assets/uml/05-classes-comportements.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/05-classes-comportements.svg\|SVG]] |
 | 6   | Classes : vaisseau modulaire   | [[2D-Game/ideas/pierre/assets/uml/06-classes-vaisseau.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/06-classes-vaisseau.svg\|SVG]] |
-| 7   | Classes : run et niveaux       | [[2D-Game/ideas/pierre/assets/uml/07-classes-run.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/07-classes-run.svg\|SVG]] |
-| 8   | Classes : méta-progression     | [[2D-Game/ideas/pierre/assets/uml/08-classes-meta.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/08-classes-meta.svg\|SVG]] |
+| 7   | Classes : run et boss rush     | [[2D-Game/ideas/pierre/assets/uml/07-classes-run.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/07-classes-run.svg\|SVG]] |
 | 9   | Séquence : une frame           | [[2D-Game/ideas/pierre/assets/uml/09-sequence-frame.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/09-sequence-frame.svg\|SVG]] |
-| 10  | Séquence : fin de niveau       | [[2D-Game/ideas/pierre/assets/uml/10-sequence-fin-niveau.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/10-sequence-fin-niveau.svg\|SVG]] |
-| 11  | Séquence : mort et déblocages  | [[2D-Game/ideas/pierre/assets/uml/11-sequence-mort.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/11-sequence-mort.svg\|SVG]] |
+| 10  | Séquence : boss vaincu         | [[2D-Game/ideas/pierre/assets/uml/10-sequence-fin-niveau.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/10-sequence-fin-niveau.svg\|SVG]] |
 | 12  | États : écrans                 | [[2D-Game/ideas/pierre/assets/uml/12-etats-ecrans.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/12-etats-ecrans.svg\|SVG]] |
 | 13  | États : phases d'un boss       | [[2D-Game/ideas/pierre/assets/uml/13-etats-boss.png\|PNG]] · [[2D-Game/ideas/pierre/assets/uml/13-etats-boss.svg\|SVG]] |

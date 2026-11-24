@@ -17,4 +17,4 @@ Retour : [[2D-Game/taches/chris/index|Tâches de Chris]] · [[2D-Game/ideas/pier
 - [ ] Tests : un pattern tire toujours les mêmes balles au même instant (déterministe) ; les `ShotModifiers` changent bien la vitesse et les dégâts ; le boss change de phase aux bons seuils de PV
 
 > [!info] Pierre attend cette tâche
-> Sa tâche [[2D-Game/taches/pierre/Factories|Factories]] (`EnemyFactory`) a besoin des patterns.
+> Sa tâche [[2D-Game/taches/pierre/Factories|Factories]] (`BossFactory`) a besoin des patterns et de `Boss`.

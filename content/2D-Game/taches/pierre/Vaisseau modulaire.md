@@ -13,7 +13,6 @@ Retour : [[2D-Game/taches/pierre/index|Tâches de Pierre]] · [[2D-Game/ideas/pi
 - [ ] `DashBooster` et `ShieldGenerator` (`absorb()`)
 - [ ] `ShipAssembly` (Composite) : `canPlace()`, `place()`, `merge()`, `remove()`, stats = somme des enfants
 - [ ] `PlayerShip` : déplacement, `dash()`, `takeDamage()` qui passe d'abord par `assembly.absorb()`
-- [ ] Publier `PartEquipped` quand une pièce est placée ou fusionnée
 - [ ] Tests : les stats s'additionnent ; deux pièces identiques fusionnent sur une seule case ; deux pièces différentes ne fusionnent pas ; on ne peut pas placer sur une case occupée ; un bouclier absorbe les dégâts avant les PV
 
 > [!info] Chris attend cette tâche
