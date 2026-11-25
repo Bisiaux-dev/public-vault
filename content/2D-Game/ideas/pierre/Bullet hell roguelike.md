@@ -43,13 +43,13 @@ flowchart TD
 ## Boss rush
 
 - Le jeu n'a **que des boss** : pas de niveaux normaux ni de mini-boss.
-- Les boss sont **faits à la main** (patterns fixes) et arrivent **toujours dans le même ordre** (au moins 3).
-- Après le dernier boss, on **repart du premier, plus difficile**. La partie est **infinie** : on joue jusqu'à la mort.
+- Les boss sont **faits à la main** (patterns fixes). Il y a **1 seul boss pour l'instant** (on pourra en ajouter).
+- Une fois vaincu, le boss **revient, plus difficile**. La partie est **infinie** : on joue jusqu'à la mort.
 - Le **score** est le nombre de boss vaincus.
 
 ```mermaid
 flowchart LR
-    B1((Boss 1)) --> B2((Boss 2)) --> B3((Boss 3)) --> B1b((Boss 1, plus dur)) --> INF[... à l'infini]
+    B1((Boss)) --> B2((Boss, plus dur)) --> B3((Boss, encore plus dur)) --> INF[... à l'infini]
 ```
 
 ## Difficulté
@@ -74,6 +74,7 @@ Les **attaques des boss restent les mêmes** : elles suivent des **patterns fixe
 - L'éditeur est disponible **après chaque boss**.
 - On place les pièces gagnées sur son vaisseau (canons, boosters de dash…).
 - Deux bases de vaisseau sont disponibles dès le début : la **standard** et la **base dash**.
+- On commence avec **le cockpit** au centre du vaisseau : il tire comme le canon de base (mêmes dégâts, mêmes stats), seul son visuel change. On ne peut en avoir **qu'un seul**.
 - **Chaque pièce prend de la place**, ce qui **agrandit la hitbox**.
 - La **taille de la grille dépend du vaisseau de base** : de **3×3 minimum** à **5×5 maximum**.
 - On peut **fusionner des pièces identiques**. Leurs **stats s'additionnent** et elles n'occupent **qu'une seule place**. C'est le moyen de devenir plus fort sans trop grossir.

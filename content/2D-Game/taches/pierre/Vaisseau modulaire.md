@@ -9,7 +9,7 @@ Le cœur du jeu (pattern Composite) : le vaisseau est un assemblage de pièces.
 Retour : [[2D-Game/taches/pierre/index|Tâches de Pierre]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3.4
 
 - [ ] `GridPos` (record `col`, `row`) : une case de la grille. `Stats` et `PartType` viennent de [[2D-Game/taches/pierre/Factories|Factories]], à coder avant
-- [ ] `ShipComponent` (interface) et `ShipPart` (abstraite) avec `canMergeWith()` et `mergeWith()`
+- [ ] `ShipComponent` (interface) et `ShipPart` (abstraite) avec `canMergeWith()` et `mergeWith()` (`false` pour le `COCKPIT`, qui est unique)
 - [ ] `DashBooster` et `ShieldGenerator` (`absorb()`)
 - [ ] `ShipAssembly` (Composite) : `canPlace()`, `place()`, `merge()`, `remove()`, stats = somme des enfants
 - [ ] `PlayerShip` : déplacement, `dash()`, `takeDamage()` qui passe d'abord par `assembly.absorb()`

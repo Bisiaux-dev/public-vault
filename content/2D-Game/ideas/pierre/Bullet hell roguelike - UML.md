@@ -382,6 +382,7 @@ classDiagram
         SPREAD_GUN
         DASH_BOOSTER
         SHIELD
+        COCKPIT
     }
     class Stats {
         <<record>>
@@ -449,6 +450,7 @@ classDiagram
 - `GridPos` est une case de la grille du vaisseau (`col`, `row`). C'est un `record` : deux `GridPos` aux mêmes coordonnées sont égales, ce qui permet de savoir si une case est déjà occupée.
 - `mergeWith()` modifie la pièce elle-même (niveau + 1, stats additionnées avec `plus()`) au lieu d'en créer une nouvelle : comme `ShipPart` est abstraite, c'est la seule façon de garder la bonne sous-classe. `ShipAssembly.merge()` retire ensuite l'autre pièce et libère sa case.
 - `CANNON` et `SPREAD_GUN` sont tous deux des `Weapon` : seul leur `BulletPattern` change. Ajouter une arme ne demande pas de nouvelle classe.
+- `COCKPIT` est la **pièce de départ** : `ShipFactory.create()` la pose sur la case centrale de la base. C'est un `Weapon` avec **les mêmes stats et le même tir que `CANNON`**, seul son sprite change. Il n'y en a qu'**un seul** sur le vaisseau : `RewardGenerator` ne le propose jamais et `canMergeWith()` renvoie `false` pour lui. Une pièce posée ne se retire pas, donc il reste toujours sur le vaisseau.
 - `PlayerShip.takeDamage()` passe d'abord les dégâts à `assembly.absorb()`. Les boucliers en retirent une partie, le reste touche les PV.
 - `DashBase` est disponible dès le début, au choix avec `StandardBase` dans `ShipSelectScreen` : son `applyPassive()` réduit le temps de recharge du dash.
 
@@ -508,9 +510,9 @@ classDiagram
 ```
 
 - `Run.nextLevel()` fait `bossNumber++`, `difficulty.increase()`, puis crée un `Level` avec `bossFactory.create(bossNumber, difficulty)`.
-- `BossFactory` connaît la liste des boss (au moins 3). Le boss `n` est le boss `(n - 1) % nombre de boss` de la liste : après le dernier, on repart du premier avec une difficulté plus haute. La partie dure jusqu'à la mort.
+- `BossFactory` connaît la liste des boss : **1 seul boss pour l'instant** (la liste pourra grandir). Le boss `n` est le boss `(n - 1) % nombre de boss` de la liste : avec un seul boss, il revient à chaque fois, avec une difficulté plus haute. La partie dure jusqu'à la mort.
 - `Level.isCleared()` est vrai quand le boss est mort. `Level` passe `List.of(boss)` à `CollisionSystem.resolve()`.
-- `RewardGenerator` reçoit un `Random` créé à partir de la graine de la run : même graine, mêmes pièces proposées. Toutes les pièces peuvent tomber.
+- `RewardGenerator` reçoit un `Random` créé à partir de la graine de la run : même graine, mêmes pièces proposées. Toutes les pièces peuvent tomber, sauf le `COCKPIT` (pièce de départ unique).
 - Le score de la run est le nombre de boss vaincus.
 
 ## 4. Diagrammes de séquence
