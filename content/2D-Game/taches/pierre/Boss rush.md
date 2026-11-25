@@ -9,7 +9,7 @@ Une run est un enchaînement de combats contre le boss (1 seul boss pour l'insta
 Retour : [[2D-Game/taches/pierre/index|Tâches de Pierre]] · [[2D-Game/ideas/pierre/Bullet hell roguelike - UML|UML]] §3.5
 
 - [ ] `DifficultyScaler` : `increase()`, `enemyShots()` (vitesse et dégâts des balles), `bossHpMultiplier()`
-- [ ] `RewardGenerator.offer(count)` : tire des pièces parmi toutes les pièces sauf le `COCKPIT`, avec le `Random` de la run
+- [x] `RewardGenerator.offer(count)` : tire des pièces parmi toutes les pièces sauf le `COCKPIT`, avec le `Random` de la run
 - [ ] `Level` : un boss, ses balles et le `CollisionSystem`, `isCleared()` quand le boss est mort *(attend `Boss` et `CollisionSystem` de Chris)*
 - [ ] `Run` : graine, `nextLevel()`, `onLevelCleared()` (score + 1), `onPlayerDeath()`
 - [ ] Tests : avec la même graine, on obtient les mêmes pièces ; le boss revient après sa défaite ; la difficulté augmente à chaque boss
